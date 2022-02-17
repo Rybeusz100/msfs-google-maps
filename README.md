@@ -12,6 +12,7 @@ A web app that allows to monitor your flight on an interactive map from any devi
 # Usage guide
 1. Download the [latest release](https://github.com/Rybeusz100/msfs-google-map/releases).
 1. Unzip downloaded file.
+1. Double click on the ```install.bat``` file.
 1. Double click on the ```run.bat``` file.
 1. Start Microsoft Flight Simulator.
 
