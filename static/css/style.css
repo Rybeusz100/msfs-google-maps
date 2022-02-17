@@ -1,0 +1,31 @@
+#map {
+    height: 100%;
+}
+      
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+@media screen and (max-width: 1000px) {
+    .largerCheckbox {
+        width: 70px;
+        height: 70px;
+    }
+
+    .largerFont {
+        font-size: 70px;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .largerCheckbox {
+        width: 30px;
+        height: 30px;
+    }
+
+    .largerFont {
+        font-size: 30px;
+    }
+}
