@@ -20,6 +20,7 @@ class Connection:
         SimConnect.RequestData(self.hSimConnect)
         position = SimConnect.GetPosition()
         if 'ConnectionEnded' in position:
+            self.disconnect()
             os._exit(0)
         
         position['heading'] = degrees(position['heading'])

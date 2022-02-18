@@ -1,13 +1,16 @@
 from flask import Flask, render_template, jsonify
 from time import sleep
 import simconnect
-import atexit
+import win32api
 
 app = Flask(__name__)
 
 sim_connection = simconnect.Connection()
 
-atexit.register(sim_connection.disconnect)
+def on_exit(sig, func=None):
+    sim_connection.disconnect()
+
+win32api.SetConsoleCtrlHandler(on_exit, True)
 
 if not sim_connection.connect():
     print('Connection failed, retrying. The app will start as soon as the connection is established.')
