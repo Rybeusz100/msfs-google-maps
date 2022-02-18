@@ -7,14 +7,16 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}"/>
   </head>
   <body>
-    <div>
-      <input type="checkbox" id="follow" name="follow" class="largerCheckbox" checked>
-      <label for="follow" class="largerFont">Follow</label>
+    <div id="map-wrapper">
+      <div>
+        <input type="checkbox" id="follow" name="follow" class="largerCheckbox" checked>
+        <label for="follow" class="largerFont">Follow</label>
 
-      <input type="checkbox" id="nosleep" name="nosleep" class="largerCheckbox">
-      <label for="nosleep" class="largerFont">Keep screen on</label>
+        <input type="checkbox" id="nosleep" name="nosleep" class="largerCheckbox">
+        <label for="nosleep" class="largerFont">Keep screen on</label>
+      </div>
+        <div id="map"></div>
     </div>
-    <div id="map"></div>
     <script src="{{ url_for('static', filename='js/nosleep.min.js') }}"></script>
     <script>
       let noSleep = new NoSleep()
