@@ -1,6 +1,8 @@
 let map;
 let svgMarker;
 let planeMarker;
+let follow = true;
+let followTimeoutID;
 
 function initMap() {
 
@@ -26,10 +28,33 @@ function initMap() {
     icon: svgMarker,
   });
 
-  setTimeout(getPosition, 1000)
+  map.addListener("drag", disableFollow)
+
+  document.getElementById("follow").addEventListener('change', function() {
+    if(this.checked) {
+      follow = true
+      if(followTimeoutID != null) {
+        clearTimeout(followTimeoutID)
+      }
+    }
+  })
+
+  setTimeout(updatePosition, 1000)
 }
 
-function getPosition() {
+function disableFollow() {
+  follow = false
+  if(followTimeoutID != null) {
+    clearTimeout(followTimeoutID)
+  }
+  followTimeoutID = setTimeout(enableFollow, 10000)
+}
+
+function enableFollow() {
+  follow = true;
+}
+
+function updatePosition() {
     let request = new XMLHttpRequest()
     request.open('GET', './position')
     request.onload = function() {
@@ -46,7 +71,7 @@ function getPosition() {
 
       planeMarker.setPosition(new google.maps.LatLng(position.latitude, position.longitude))
 
-      if(document.getElementById("follow").checked) {
+      if(document.getElementById("follow").checked && follow) {
         map.setCenter({
           lat: position.latitude,
           lng: position.longitude
@@ -55,5 +80,5 @@ function getPosition() {
     }
     request.send()
 
-    setTimeout(getPosition, 1000)
+    setTimeout(updatePosition, 1000)
 }
