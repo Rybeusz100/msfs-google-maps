@@ -17,20 +17,9 @@
       </div>
         <div id="map"></div>
     </div>
+    <script src="{{ url_for('static', filename='js/checkRelease.js') }}"></script>
     <script src="{{ url_for('static', filename='js/nosleep.min.js') }}"></script>
-    <script>
-      let noSleep = new NoSleep()
-      
-      let checkbox = document.getElementById('nosleep')
-      checkbox.addEventListener('change', function() {
-        if(this.checked) {
-          noSleep.enable()
-        }
-        else {
-          noSleep.disable()
-        }
-      })
-    </script>
+    <script src="{{ url_for('static', filename='js/setNoSleep.js') }}"></script>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&key={{ api_key }}&v=weekly" async></script>
   </body>
