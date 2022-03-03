@@ -20,6 +20,7 @@ struct DataStruct
     double latitude;
     double longitude;
     double heading;
+    double alt_above_ground;
 };
 
 DataStruct CurrentPosition;
@@ -73,6 +74,7 @@ void AddDataToDefinition(HANDLE& hSimConnect)
     SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_1, "Plane Latitude", "degrees");
     SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_1, "Plane Longitude", "degrees");
     SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_1, "Plane Heading Degrees True", "radians");
+    SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_1, "Plane Alt Above Ground", "feet");
 }
 
 void RequestData(HANDLE& hSimConnect)
@@ -92,7 +94,7 @@ py::dict GetPosition()
         return d;
     }
 
-    py::dict d("latitude"_a = CurrentPosition.latitude, "longitude"_a = CurrentPosition.longitude, "heading"_a = CurrentPosition.heading);
+    py::dict d("latitude"_a = CurrentPosition.latitude, "longitude"_a = CurrentPosition.longitude, "heading"_a = CurrentPosition.heading, "alt_above_ground"_a = CurrentPosition.alt_above_ground);
     return d;
 }
 
