@@ -4,6 +4,9 @@ let planeMarker;
 let follow = true;
 let followTimeoutID;
 let routesArray = [];
+let airports = [];
+let latitude = 0;
+let longitude = 0;
 
 // altitude categories in feet loosely inspired by https://www.flightradar24.com/faq
 const GROUND_ALT = 328 // 100 meters
@@ -18,6 +21,8 @@ const VERY_HIGH_ALT = 40000
 const VERY_HIGH_ALT_COLOR = "#0000ff"
 // above 40 000 feet
 const MAX_ALT_COLOR = "#ff0000"
+
+let infoWindow
 
 function initMap() {
   // init
@@ -42,6 +47,8 @@ function initMap() {
     map: map,
     icon: svgMarker,
   });
+
+  infoWindow = new google.maps.InfoWindow()
 
   // add listeners
   map.addListener("drag", disableFollow)
@@ -73,6 +80,10 @@ function initMap() {
       route.setMap(null)
     }
     routesArray = []
+  })
+
+  document.getElementById("showAirports").addEventListener('click', function() {
+    markAirports()
   })
 
   setTimeout(updatePosition, 1000)
@@ -111,6 +122,9 @@ function updatePosition() {
       let newLatLng = new google.maps.LatLng(position.latitude, position.longitude)
 
       planeMarker.setPosition(newLatLng)
+
+      latitude = position.latitude
+      longitude = position.longitude
 
       // add route point
       let color
@@ -172,4 +186,40 @@ function updatePosition() {
     request.send()
 
     setTimeout(updatePosition, 1000)
+}
+
+function clearAirports() {
+  for (const marker of airports) {
+    marker.setMap(null)
+  }
+  airports = []
+}
+
+function markAirports() {
+  let request = new XMLHttpRequest()
+  request.open('GET', `./airports/${latitude}/${longitude}/20`)
+  request.onload = function() {
+      let json_data = JSON.parse(request.responseText)
+      for (const entry of json_data) {
+        let marker = new google.maps.Marker({
+          position: new google.maps.LatLng(entry.latitude_deg, entry.longitude_deg),
+          map,
+          icon: "./images/" + entry.type + ".png",
+          title: `<h2>${entry.name}</h2><b>type: ${entry.type.replace("_", " ")}`,
+          optimized: false,
+        })
+
+        marker.addListener('click', () => {
+          infoWindow.close()
+          infoWindow.setContent(marker.getTitle())
+          infoWindow.open(marker.getMap(), marker)
+        })
+
+        airports.push(marker)
+      }
+  }
+
+  clearAirports()
+
+  request.send()
 }

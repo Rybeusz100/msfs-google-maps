@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   sodipodi:docname="balloonport.svg"
+   inkscape:export-filename="D:\projekty\msfs-google-map\static\images\balloonport.png"
+   inkscape:export-xdpi="12.795637"
+   inkscape:export-ydpi="12.795637"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.5554293"
+     inkscape:cx="-34.395649"
+     inkscape:cy="42.75347"
+     inkscape:window-width="1718"
+     inkscape:window-height="1360"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <circle
+       id="path838"
+       cx="0"
+       cy="0"
+       r="37.252579"
+       style="stroke-width:0.264583"
+       transform="scale(-1)" />
+    <rect
+       id="rect1044"
+       width="12"
+       height="12"
+       x="-6"
+       y="50"
+       style="stroke-width:0.255663" />
+    <rect
+       id="rect1148"
+       width="2.296392"
+       height="22.793816"
+       x="-20.787975"
+       y="25.373013"
+       style="stroke-width:0.262523"
+       transform="rotate(-17.544293)" />
+    <rect
+       id="rect1230"
+       width="2.296392"
+       height="22.793816"
+       x="-20.798952"
+       y="25.159601"
+       style="stroke-width:0.262523"
+       transform="matrix(-0.9534842,-0.30144299,-0.30144299,0.9534842,0,0)" />
+  </g>
+</svg>
