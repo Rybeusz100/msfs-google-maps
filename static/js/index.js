@@ -197,7 +197,7 @@ function clearAirports() {
 
 function markAirports() {
   let request = new XMLHttpRequest()
-  request.open('GET', `./airports/${latitude}/${longitude}/20`)
+  request.open('GET', `./airports/${latitude}/${longitude}/${document.getElementById("distance").value}`)
   request.onload = function() {
       let json_data = JSON.parse(request.responseText)
       for (const entry of json_data) {
@@ -206,7 +206,6 @@ function markAirports() {
           map,
           icon: "./images/" + entry.type + ".png",
           title: `<h2>${entry.name}</h2><b>type: ${entry.type.replace("_", " ")}`,
-          optimized: false,
         })
 
         marker.addListener('click', () => {

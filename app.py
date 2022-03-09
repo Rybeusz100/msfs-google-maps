@@ -43,9 +43,9 @@ def position():
     print(position)
     return jsonify(position)
 
-@app.route('/airports/<latitude>/<longitude>/<count>')
-def airports(latitude, longitude, count):
-    airports = nearest_airports.get_airports(latitude, longitude, int(count))
+@app.route('/airports/<latitude>/<longitude>/<distance>')
+def airports(latitude, longitude, distance):
+    airports = nearest_airports.get_airports(latitude, longitude, int(distance))
     print(f"returned {len(airports)} airports")
     return jsonify(airports)
 
