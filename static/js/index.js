@@ -7,6 +7,7 @@ let routesArray = [];
 let airports = [];
 let latitude = 0;
 let longitude = 0;
+let airportsShown = false;
 
 // altitude categories in feet loosely inspired by https://www.flightradar24.com/faq
 const GROUND_ALT = 328 // 100 meters
@@ -83,7 +84,16 @@ function initMap() {
   })
 
   document.getElementById("showAirports").addEventListener('click', function() {
-    markAirports()
+    if(airportsShown) {
+      this.innerHTML = "Show airports"
+      airportsShown = false
+      clearAirports()
+    }
+    else {
+      this.innerHTML = "Hide airports"
+      airportsShown = true
+      markAirports()
+    }
   })
 
   setTimeout(updatePosition, 1000)
