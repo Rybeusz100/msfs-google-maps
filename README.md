@@ -2,7 +2,9 @@
 [flightsim.to page](https://flightsim.to/file/28216/google-map-for-msfs)
 
 ## Description
-A web app that allows to monitor your flight on an interactive map from any device with a web browser.
+A web app that allows to monitor your flight on an interactive map from any device with a web browser.  
+  
+![alt text](https://cdn.flightsim.to/images/22/google-map-for-msfs-jYHQP.jpg?width=1400&auto_optimize=medium)
 
 ## Technologies used
 - Python 3.10
