@@ -1,4 +1,4 @@
-let currentVersion = 'v1.0.1'
+let currentVersion = 'v1.1.0'
 let request = new XMLHttpRequest()
 request.open('GET', 'https://api.github.com/repos/Rybeusz100/msfs-google-map/releases/latest')
 request.onload = function() {
