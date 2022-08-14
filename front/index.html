@@ -3,9 +3,9 @@
   <head>
     <title>Map</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/plane_icon.png') }}">
+    <link rel="icon" type="image/x-icon" href="./images/plane_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="./style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
   </head>
   <body>
@@ -55,11 +55,11 @@
       <div id="map"></div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/checkRelease.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/nosleep.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/setNoSleep.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/topnav.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&key={{ api_key }}&v=weekly" async></script>
+    <script src="./checkRelease.js"></script>
+    <script src="./nosleep.min.js"></script>
+    <script src="./setNoSleep.js"></script>
+    <script src="./index.js"></script>
+    <script src="./topnav.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&key=&v=weekly" async></script>
   </body>
 </html>

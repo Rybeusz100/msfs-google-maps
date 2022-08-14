@@ -1,3 +1,0 @@
-flask
-pywin32
-haversine
