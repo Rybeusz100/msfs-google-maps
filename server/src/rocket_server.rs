@@ -82,7 +82,7 @@ fn get_airports(
 
 pub async fn start(conn: SimWorkerConn) {
     let tx = conn.tx.lock().unwrap().clone();
-    let airports = match Airports::from_file("../airports.json") {
+    let airports = match Airports::from_file("airports.json") {
         Ok(v) => v,
         Err(why) => {
             error!("Reading airports.json failed: {}", why);
