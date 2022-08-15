@@ -1,5 +1,3 @@
-.venv/
-__pycache__/
 api_key.txt
-run.bat
-*.pyd
+server/target
+dist
