@@ -5,20 +5,20 @@ use serde_json::json;
 use std::path::{Path, PathBuf};
 
 mod airports;
+mod cors;
 mod utils;
 
 use airports::*;
+use cors::Cors;
 
 #[get("/")]
 async fn index() -> Option<NamedFile> {
-    NamedFile::open(Path::new("../front/index.html")).await.ok()
+    NamedFile::open(Path::new("./front/index.html")).await.ok()
 }
 
 #[get("/<file..>")]
 async fn file(file: PathBuf) -> Option<NamedFile> {
-    NamedFile::open(Path::new("../front/").join(file))
-        .await
-        .ok()
+    NamedFile::open(Path::new("./front/").join(file)).await.ok()
 }
 
 #[get("/shutdown")]
@@ -66,7 +66,7 @@ fn reset_route(conn: &State<SimWorkerConn>) -> String {
 
 #[get("/api_key")]
 async fn api_key() -> Option<NamedFile> {
-    NamedFile::open(Path::new("../api_key")).await.ok()
+    NamedFile::open(Path::new("./api_key.txt")).await.ok()
 }
 
 #[get("/airports/<latitude>/<longitude>/<radius_km>")]
@@ -91,6 +91,7 @@ pub async fn start(conn: SimWorkerConn) {
     };
 
     let _rocket = rocket::build()
+        .attach(Cors)
         .mount(
             "/",
             routes![

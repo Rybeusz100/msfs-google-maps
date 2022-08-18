@@ -1,6 +1,6 @@
-use std::{error::Error, fs::File, io::BufReader};
-use serde::{Deserialize, Serialize};
 use super::utils::*;
+use serde::{Deserialize, Serialize};
+use std::{error::Error, fs::File, io::BufReader};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Airport {
