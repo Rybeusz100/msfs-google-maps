@@ -11,4 +11,12 @@ cd ..
 cp server/target/release/server.exe dist/
 cp server/Rocket.toml dist/
 cp server/SimConnect.dll dist/
-cp server/airports.json dist/
+cp -r server/airports.json dist/
+
+cd front
+npm run build
+cd ..
+
+cp -r front/build/ dist/front
+
+New-Item -Path "dist" -Name "api_key.txt"
