@@ -1,4 +1,4 @@
-export interface Airport {
+export interface IAirport {
     wikipedia_link: string;
     type: string;
     scheduled_service: string;
@@ -17,4 +17,26 @@ export interface Airport {
     gps_code: string;
     elevation_ft: number;
     continent: string;
+}
+
+export interface IPosition {
+    lat: number;
+    lon: number;
+    alt: number;
+    hdg: number;
+}
+
+export interface IResponseRoute {
+    id: string;
+    points: IPosition[];
+}
+
+export interface ISVGMarker {
+    path: string;
+    fillColor: string;
+    fillOpacity: number;
+    strokeWeight: number;
+    rotation: number;
+    scale: number;
+    anchor: google.maps.Point;
 }

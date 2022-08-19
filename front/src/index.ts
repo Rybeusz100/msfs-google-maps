@@ -4,7 +4,6 @@ import loadGoogleMaps from './map/googleMapsLoader';
 import { getApiKey, shutdown } from './lib/utils';
 import checkRelease from './lib/checkRelease';
 import { VERSION } from './lib/constants';
-import Position from './lib/position';
 
 checkRelease(VERSION);
 
@@ -31,7 +30,7 @@ shutdownBtn.addEventListener('click', () => {
 const apiKey = getApiKey();
 
 loadGoogleMaps(apiKey, () => {
-    let map = new GoogleMap(new Position(0, 0, 0, 0), [], followCheckbox.checked, showRouteCheckbox.checked);
+    let map = new GoogleMap(followCheckbox.checked, showRouteCheckbox.checked);
 
     followCheckbox.addEventListener('change', () => {
         map.setFollow(followCheckbox.checked);

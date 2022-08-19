@@ -1,4 +1,6 @@
-export default class Position {
+import type { IPosition } from './interfaces';
+
+export default class Position implements IPosition {
     lat: number;
     lon: number;
     alt: number;
