@@ -10,7 +10,6 @@ async fn main() {
 
     env_logger::init();
 
-    #[cfg(not(debug_assertions))]
     server::hello::hello_message();
 
     let (handle, worker_conn) = sim_connection::start();

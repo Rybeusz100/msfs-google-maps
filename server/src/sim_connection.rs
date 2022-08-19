@@ -49,7 +49,8 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
                     Ok(simconnect::DispatchResult::SimobjectData(data)) => unsafe {
                         if let DEFINE_ID_POSITION = data.dwDefineID {
                             #[allow(unaligned_references)]
-                            let position: Position = transmute_copy(&data.dwData);
+                            let mut position: Position = transmute_copy(&data.dwData);
+                            position.hdg = position.hdg.to_degrees();
                             if position.is_ok() {
                                 route.lock().unwrap().add_point(position);
                             }

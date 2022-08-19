@@ -1,11 +1,10 @@
 use colored::*;
 use local_ip_address::local_ip;
 
-#[allow(dead_code)]
 pub fn hello_message() {
     let mut conf = match local_ip() {
         Ok(ip) => ip.to_string(),
-        Err(_) => String::from("unknown"),
+        Err(_) => String::from("THIS_PC_IP"),
     };
     conf.push_str(":8054");
 
