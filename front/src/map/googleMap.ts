@@ -18,7 +18,15 @@ export default class GoogleMap extends BaseMap {
         this.infoWindow = new google.maps.InfoWindow();
         this.visualRoute = [];
 
-        setTimeout(() => this.update(), 1000);
+        this.map?.addListener('drag', () => {
+            this.followPaused = true;
+                window.clearTimeout(this.followResumeTimeoutID);
+            this.followResumeTimeoutID = window.setTimeout(() => {
+                this.followPaused = false;
+            }, 5000);
+        })
+
+        this.updateIntervalID = window.setInterval(() => this.update(), 1000);
     }
 
     createMap() {
@@ -82,8 +90,6 @@ export default class GoogleMap extends BaseMap {
 
     update() {
         this.updateRoute();
-
-        setTimeout(() => this.update(), 1000);
     }
 
     updateRoute() {
@@ -166,6 +172,10 @@ export default class GoogleMap extends BaseMap {
 
             let newLatLng = new google.maps.LatLng(this.position.lat, this.position.lon);
             this.planeMarker?.setPosition(newLatLng);
+
+            if (this.followOn && !this.followPaused) {
+                this.map?.setCenter(newLatLng);
+            }
         }
     }
 }

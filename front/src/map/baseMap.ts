@@ -7,18 +7,24 @@ export default abstract class BaseMap {
     position: Position;
     route: Position[];
     followOn: boolean;
+    followPaused: boolean;
+    followResumeTimeoutID?: number;
     showRouteOn: boolean;
     routeID: string;
+    updateIntervalID?: number;
 
     constructor(followOn: boolean, showRouteOn: boolean) {
         this.position = new Position(0, 0, 0, 0);
         this.route = [];
         this.followOn = followOn;
+        this.followPaused = false;
         this.showRouteOn = showRouteOn;
         this.routeID = '';
     }
 
     removeMap() {
+        window.clearInterval(this.updateIntervalID);
+        window.clearTimeout(this.followResumeTimeoutID);
         let map = document.getElementById('map');
         if (map) {
             let parent = map.parentNode;
@@ -33,6 +39,9 @@ export default abstract class BaseMap {
 
     setFollow(followOn: boolean) {
         this.followOn = followOn;
+        if (followOn) {
+            this.followPaused = false;
+        }
     }
 
     setShowRoute(showRouteOn: boolean) {

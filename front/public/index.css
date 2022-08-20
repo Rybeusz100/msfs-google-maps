@@ -87,6 +87,12 @@ body {
     height: 40px;
 }
 
+#changeMode {
+    font-size: 22px;
+    width: 40px;
+    height: 40px;
+}
+
 /* NUMBER INPUT FIELD */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
