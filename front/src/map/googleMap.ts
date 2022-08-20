@@ -20,11 +20,11 @@ export default class GoogleMap extends BaseMap {
 
         this.map?.addListener('drag', () => {
             this.followPaused = true;
-                window.clearTimeout(this.followResumeTimeoutID);
+            window.clearTimeout(this.followResumeTimeoutID);
             this.followResumeTimeoutID = window.setTimeout(() => {
                 this.followPaused = false;
             }, 5000);
-        })
+        });
 
         this.updateIntervalID = window.setInterval(() => this.update(), 1000);
     }

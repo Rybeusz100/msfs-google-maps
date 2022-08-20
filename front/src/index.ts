@@ -6,6 +6,9 @@ import checkRelease from './lib/checkRelease';
 import { VERSION } from './lib/constants';
 import type BaseMap from './map/baseMap';
 import { Mode } from './lib/enums';
+import 'ol/ol.css';
+import OpenStreetMap from './map/openStreetMap';
+import toggleTopnav from './lib/topnav';
 
 checkRelease(VERSION);
 
@@ -17,6 +20,9 @@ const showAirportsBtn = document.getElementById('showAirports') as HTMLButtonEle
 const radiusInput = document.getElementById('radius') as HTMLInputElement;
 const shutdownBtn = document.getElementById('shutdown') as HTMLButtonElement;
 const changeModeBtn = document.getElementById('changeMode') as HTMLButtonElement;
+const settingsGearBtn = document.getElementById('settings-gear') as HTMLElement;
+
+settingsGearBtn.addEventListener('click', toggleTopnav);
 
 showAirportsBtn.setAttribute('shown', 'false');
 
@@ -39,7 +45,7 @@ clearRouteBtn.addEventListener('click', () => {
 });
 
 changeModeBtn.addEventListener('click', () => {
-    const modeText = mode === Mode.GoogleMaps ? 'OpenStreetMap' : 'Google Maps'
+    const modeText = mode === Mode.GoogleMaps ? 'OpenStreetMap' : 'Google Maps';
     window.confirm(`Do you want to change the mode to ${modeText} ?`) && changeMode();
 });
 
@@ -71,16 +77,18 @@ function startApp(mode: Mode) {
         if (!googleMapsLoaded) {
             googleMapsLoaded = true;
             const apiKey = getApiKey();
-            
+
             loadGoogleMaps(apiKey, () => {
                 map = new GoogleMap(followCheckbox.checked, showRouteCheckbox.checked);
             });
-        }
-        else {
+        } else {
             map = new GoogleMap(followCheckbox.checked, showRouteCheckbox.checked);
         }
     }
 
+    if (mode === Mode.OpenStreetMap) {
+        map = new OpenStreetMap(followCheckbox.checked, showRouteCheckbox.checked);
+    }
 }
 
 function changeMode() {

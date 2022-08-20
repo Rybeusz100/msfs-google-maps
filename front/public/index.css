@@ -114,3 +114,46 @@ input::-webkit-inner-spin-button {
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
+
+#settings-gear {
+    cursor: pointer;
+}
+
+@media screen and (min-width: 1236px) {
+    .gear-wrapper {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1236px) {
+    .topnav {
+        position: absolute;
+        z-index: 5;
+        border-radius: var(--borderRadius);
+        bottom: 32px;
+        left: 8px;
+        padding: 8px 16px 8px 16px;
+        flex-direction: column;
+    }
+
+    .topnav-section {
+        display: none;
+    }
+    
+    .topnav-section.responsive {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .topnav-section.topnav-end {
+        flex-direction: row;
+    }
+
+    .topnav-center {
+        justify-content: center;
+    }
+
+    .gear-wrapper {
+        width: 100%;
+    }
+}
