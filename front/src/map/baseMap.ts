@@ -1,4 +1,5 @@
-import { API_URL } from '../lib/constants';
+import { hexToColor, lerpColor } from '../lib/utils';
+import { API_URL, colorAltMap } from '../lib/constants';
 import type { IAirport, IResponseRoute } from '../lib/interfaces';
 import Position from '../lib/position';
 
@@ -36,6 +37,7 @@ export default abstract class BaseMap {
 
     setShowRoute(showRouteOn: boolean) {
         this.showRouteOn = showRouteOn;
+        this.toggleRoute();
     }
 
     getAirports(lat: number, lon: number, radius: number, callback: (a: IAirport[]) => void) {
@@ -62,6 +64,25 @@ export default abstract class BaseMap {
         } catch {}
     }
 
+    getColor(alt: number): string {
+        for (const [i, el] of colorAltMap.entries()) {
+            if (alt < el.alt) {
+                if (i === 0) {
+                    return hexToColor(el.color);
+                }
+                return hexToColor(
+                    lerpColor(
+                        colorAltMap[i - 1].color,
+                        el.color,
+                        (alt - colorAltMap[i - 1].alt) / (el.alt - colorAltMap[i - 1].alt),
+                    ),
+                );
+            }
+        }
+
+        return hexToColor(colorAltMap.at(-1)!.color);
+    }
+
     abstract createMap(): void;
     abstract markAirports(radius: number): void;
     abstract clearAirports(): void;
@@ -70,4 +91,5 @@ export default abstract class BaseMap {
     abstract updatePosition(): void;
     abstract updateRoute(): void;
     abstract clearRoute(): void;
+    abstract toggleRoute(): void;
 }

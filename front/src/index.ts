@@ -1,7 +1,7 @@
 import NoSleep from 'nosleep.js';
 import GoogleMap from './map/googleMap';
 import loadGoogleMaps from './map/googleMapsLoader';
-import { getApiKey, shutdown } from './lib/utils';
+import { getApiKey, resetRoute, shutdown } from './lib/utils';
 import checkRelease from './lib/checkRelease';
 import { VERSION } from './lib/constants';
 
@@ -25,6 +25,10 @@ noSleepCheckbox.addEventListener('change', () => {
 
 shutdownBtn.addEventListener('click', () => {
     window.confirm('Are you sure you want to shutdown the server?') && shutdown();
+});
+
+clearRouteBtn.addEventListener('click', () => {
+    resetRoute();
 });
 
 const apiKey = getApiKey();

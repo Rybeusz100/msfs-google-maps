@@ -31,7 +31,7 @@ impl FakeRoute {
 
     pub fn get_position(&mut self) -> Position {
         self.current_pos = pos_from_dir(&self.current_pos, self.current_pos.hdg, 0.3);
-        self.current_pos.alt += 500f64 * self.asc;
+        self.current_pos.alt += 50f64 * self.asc;
         if self.current_pos.alt < 10f64 {
             self.asc = 1f64;
         }

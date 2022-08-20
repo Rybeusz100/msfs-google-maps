@@ -40,3 +40,8 @@ export interface ISVGMarker {
     scale: number;
     anchor: google.maps.Point;
 }
+
+export interface IColorAlt {
+    color: number;
+    alt: number;
+}

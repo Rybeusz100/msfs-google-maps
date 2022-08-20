@@ -8,6 +8,7 @@ export default class GoogleMap extends BaseMap {
     planeMarker?: google.maps.Marker;
     airports: google.maps.Marker[];
     infoWindow: google.maps.InfoWindow;
+    visualRoute: google.maps.Polyline[];
 
     constructor(followOn: boolean, showRouteOn: boolean) {
         super(followOn, showRouteOn);
@@ -15,6 +16,7 @@ export default class GoogleMap extends BaseMap {
         this.createMarker();
         this.airports = [];
         this.infoWindow = new google.maps.InfoWindow();
+        this.visualRoute = [];
 
         setTimeout(() => this.update(), 1000);
     }
@@ -80,7 +82,6 @@ export default class GoogleMap extends BaseMap {
 
     update() {
         this.updateRoute();
-        this.updatePosition();
 
         setTimeout(() => this.update(), 1000);
     }
@@ -94,13 +95,66 @@ export default class GoogleMap extends BaseMap {
                 resRoute.points.forEach((point) => {
                     let pos = new Position(point.lat, point.lon, point.alt, point.hdg);
                     this.route.push(pos);
+
+                    this.updateVisualRoute();
                 });
+                this.updatePosition();
             }
         });
     }
 
     clearRoute() {
         this.route = [];
+
+        this.visualRoute.forEach((seg) => {
+            seg.setMap(null);
+        });
+        this.visualRoute = [];
+    }
+
+    updateVisualRoute() {
+        const breakDiff = 300;
+        let current = this.route.at(-1)!;
+        let newLatLng = new google.maps.LatLng(current.lat, current.lon);
+
+        if (this.route.length === 1) {
+            let segment = new google.maps.Polyline({
+                path: [newLatLng],
+                strokeColor: this.getColor(current.alt),
+                strokeOpacity: 1.0,
+                strokeWeight: 5,
+            });
+            if (this.showRouteOn) {
+                segment.setMap(this.map!);
+            }
+            this.visualRoute.push(segment);
+            return;
+        }
+
+        let previous = this.route.at(-2)!;
+        let lastPath = this.visualRoute.at(-1)!.getPath();
+
+        if (Math.floor(previous.alt / breakDiff) === Math.floor(current.alt / breakDiff)) {
+            lastPath.push(newLatLng);
+        } else {
+            let coordinates = [new google.maps.LatLng(previous.lat, previous.lon), newLatLng];
+            let segment = new google.maps.Polyline({
+                path: coordinates,
+                strokeColor: this.getColor(current.alt),
+                strokeOpacity: 1.0,
+                strokeWeight: 5,
+            });
+            if (this.showRouteOn) {
+                segment.setMap(this.map!);
+            }
+            this.visualRoute.push(segment);
+        }
+    }
+
+    toggleRoute() {
+        this.visualRoute.forEach((seg) => {
+            seg.setMap(this.showRouteOn ? this.map! : null);
+        });
     }
 
     updatePosition() {
