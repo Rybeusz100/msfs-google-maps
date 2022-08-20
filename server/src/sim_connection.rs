@@ -6,9 +6,11 @@ use std::{
 };
 
 mod enums;
+// mod fake_route;
 mod structs;
 
 pub use enums::*;
+// use fake_route::FakeRoute;
 pub use structs::*;
 
 pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
@@ -18,7 +20,24 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
     let handle;
     {
         let route = route.clone();
+        // let mut fake_route = FakeRoute::new(
+        //     Position {
+        //         lat: 50.049683,
+        //         lon: 19.944544,
+        //         alt: 0f64,
+        //         hdg: 0f64,
+        //     },
+        //     Position {
+        //         lat: 40.730610,
+        //         lon: -73.935242,
+        //         alt: 0f64,
+        //         hdg: 0f64,
+        //     },
+        // );
         handle = thread::spawn(move || 'thread: loop {
+            // route.lock().unwrap().add_point(fake_route.get_position());
+            // thread::sleep(Duration::from_millis(500));
+
             let mut conn = simconnect::SimConnector::new();
             while !conn.connect("msfs-google-map") {
                 trace!("Connection to the simulator failed, retrying");
