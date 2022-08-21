@@ -9,6 +9,7 @@ import { Mode } from './lib/enums';
 import 'ol/ol.css';
 import OpenStreetMap from './map/openStreetMap';
 import toggleTopnav from './lib/topnav';
+import { getMode } from './lib/storage';
 
 checkRelease(VERSION);
 
@@ -29,7 +30,7 @@ showAirportsBtn.setAttribute('shown', 'false');
 const noSleep = new NoSleep();
 
 let map: BaseMap;
-let mode = Mode.GoogleMaps;
+let mode = getMode();
 let googleMapsLoaded = false;
 
 noSleepCheckbox.addEventListener('change', () => {
@@ -45,8 +46,7 @@ clearRouteBtn.addEventListener('click', () => {
 });
 
 changeModeBtn.addEventListener('click', () => {
-    const modeText = mode === Mode.GoogleMaps ? 'OpenStreetMap' : 'Google Maps';
-    window.confirm(`Do you want to change the mode to ${modeText} ?`) && changeMode();
+    changeMode();
 });
 
 followCheckbox.addEventListener('change', () => {
@@ -94,5 +94,6 @@ function startApp(mode: Mode) {
 function changeMode() {
     map.removeMap();
     mode = mode === Mode.GoogleMaps ? Mode.OpenStreetMap : Mode.GoogleMaps;
+    localStorage.setItem('mode', mode.toString());
     startApp(mode);
 }

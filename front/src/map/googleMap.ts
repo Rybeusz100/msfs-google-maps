@@ -19,11 +19,7 @@ export default class GoogleMap extends BaseMap {
         this.visualRoute = [];
 
         this.map?.addListener('drag', () => {
-            this.followPaused = true;
-            window.clearTimeout(this.followResumeTimeoutID);
-            this.followResumeTimeoutID = window.setTimeout(() => {
-                this.followPaused = false;
-            }, 5000);
+            this.pauseFollow();
         });
 
         this.updateIntervalID = window.setInterval(() => this.update(), 1000);

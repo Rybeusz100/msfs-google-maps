@@ -48,3 +48,7 @@ export function lerpColor(a: number, b: number, amount: number) {
 export function hexToColor(a: number) {
     return `#${a.toString(16).padStart(6, '0').slice(-6)}`;
 }
+
+export function degToRad(deg: number) {
+    return deg * (Math.PI / 180.0);
+}

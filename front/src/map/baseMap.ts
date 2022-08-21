@@ -92,6 +92,14 @@ export default abstract class BaseMap {
         return hexToColor(colorAltMap.at(-1)!.color);
     }
 
+    pauseFollow() {
+        this.followPaused = true;
+        window.clearTimeout(this.followResumeTimeoutID);
+        this.followResumeTimeoutID = window.setTimeout(() => {
+            this.followPaused = false;
+        }, 5000);
+    }
+
     abstract createMap(): void;
     abstract markAirports(radius: number): void;
     abstract clearAirports(): void;
