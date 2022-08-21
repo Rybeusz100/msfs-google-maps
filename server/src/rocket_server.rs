@@ -1,5 +1,6 @@
 use crate::sim_connection::{Message, SimWorkerConn};
 use rocket::fs::NamedFile;
+use rocket::tokio::fs;
 use rocket::{Shutdown, State};
 use serde_json::json;
 use std::path::{Path, PathBuf};
@@ -65,8 +66,13 @@ fn reset_route(conn: &State<SimWorkerConn>) -> String {
 }
 
 #[get("/api_key")]
-async fn api_key() -> Option<NamedFile> {
-    NamedFile::open(Path::new("./api_key.txt")).await.ok()
+async fn api_key() -> String {
+    let key = match fs::read_to_string("./api_key.txt").await {
+        Ok(contents) => String::from(contents.trim()),
+        Err(_) => String::from(""),
+    };
+
+    key
 }
 
 #[get("/airports/<latitude>/<longitude>/<radius_km>")]

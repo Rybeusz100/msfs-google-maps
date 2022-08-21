@@ -34,8 +34,7 @@ impl FakeRoute {
         self.current_pos.alt += 50f64 * self.asc;
         if self.current_pos.alt < 10f64 {
             self.asc = 1f64;
-        }
-        else if self.current_pos.alt > self.max_alt {
+        } else if self.current_pos.alt > self.max_alt {
             self.asc = -1f64;
         }
         self.current_pos.clone()
