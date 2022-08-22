@@ -3,29 +3,44 @@ import { Feature, Map, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { Point } from 'ol/geom';
-import { Icon, Style } from 'ol/style';
+import { Icon, Stroke, Style } from 'ol/style';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { fromLonLat } from 'ol/proj';
 import Position from '../lib/position';
 import { degToRad } from '../lib/utils';
+import LineString from 'ol/geom/LineString';
 
 export default class OpenStreetMap extends BaseMap {
-    map?: Map;
-    planeMarker?: Feature<Point>;
-    planeStyle?: Style;
+    map!: Map;
+    planeMarker!: Feature<Point>;
+    planeStyle!: Style;
+    routeLayer!: VectorLayer<VectorSource<LineString>>;
+    lastSegmentPoints!: number;
+    prevFeature!: Feature<LineString>;
 
     constructor(followOn: boolean, showRouteOn: boolean) {
         super(followOn, showRouteOn);
 
         this.createMap();
+        this.createRouteLayer();
         this.createMarker();
 
-        this.map?.on('pointerdrag', () => {
+        this.map.on('pointerdrag', () => {
             this.pauseFollow();
         });
 
         this.updateIntervalID = window.setInterval(() => this.update(), 1000);
+    }
+
+    createRouteLayer() {
+        this.routeLayer = new VectorLayer({
+            source: new VectorSource(),
+        });
+
+        this.lastSegmentPoints = 0;
+
+        this.map.addLayer(this.routeLayer);
     }
 
     createMap() {
@@ -66,7 +81,7 @@ export default class OpenStreetMap extends BaseMap {
             source: vectorSource,
         });
 
-        this.map?.addLayer(vectorLayer);
+        this.map.addLayer(vectorLayer);
     }
 
     markAirports(radius: number) {
@@ -85,11 +100,11 @@ export default class OpenStreetMap extends BaseMap {
         if (typeof this.route.at(-1) !== 'undefined') {
             this.position = this.route.at(-1)!;
 
-            this.planeMarker?.getGeometry()?.setCoordinates(fromLonLat([this.position.lon, this.position.lat]));
-            this.planeStyle?.getImage().setRotation(degToRad(this.position.hdg));
+            this.planeMarker.getGeometry()?.setCoordinates(fromLonLat([this.position.lon, this.position.lat]));
+            this.planeStyle.getImage().setRotation(degToRad(this.position.hdg));
 
             if (this.followOn && !this.followPaused) {
-                this.map?.getView().setCenter(fromLonLat([this.position.lon, this.position.lat]));
+                this.map.getView().setCenter(fromLonLat([this.position.lon, this.position.lat]));
             }
         }
     }
@@ -103,6 +118,7 @@ export default class OpenStreetMap extends BaseMap {
                 resRoute.points.forEach((point) => {
                     let pos = new Position(point.lat, point.lon, point.alt, point.hdg);
                     this.route.push(pos);
+                    this.updateVisualRoute();
                 });
                 this.updatePosition();
             }
@@ -111,9 +127,52 @@ export default class OpenStreetMap extends BaseMap {
 
     clearRoute() {
         this.route = [];
+        this.routeLayer.getSource()?.forEachFeature((f) => {
+            this.routeLayer.getSource()?.removeFeature(f);
+        });
+    }
+
+    updateVisualRoute() {
+        const breakDiff = 300;
+        let current = this.route.at(-1)!;
+        let routeStyle: any;
+
+        if (this.route.length === 1) {
+            this.lastSegmentPoints = 1;
+            routeStyle = new Style({
+                stroke: new Stroke({
+                    width: 5,
+                    color: this.getColor(current.alt),
+                }),
+            });
+        } else {
+            let previous = this.route.at(-2)!;
+
+            if (Math.floor(previous.alt / breakDiff) === Math.floor(current.alt / breakDiff)) {
+                this.lastSegmentPoints += 1;
+                routeStyle = this.prevFeature.getStyle();
+                this.routeLayer.getSource()?.removeFeature(this.prevFeature);
+            } else {
+                this.lastSegmentPoints = 2;
+                routeStyle = new Style({
+                    stroke: new Stroke({
+                        width: 5,
+                        color: this.getColor(current.alt),
+                    }),
+                });
+            }
+        }
+
+        let path = this.route.slice(-this.lastSegmentPoints).map((el) => [el.lon, el.lat]);
+        let polyline = new LineString(path);
+        polyline.transform('EPSG:4326', 'EPSG:3857');
+        let feature = new Feature(polyline);
+        feature.setStyle(routeStyle);
+        this.prevFeature = feature;
+        this.routeLayer.getSource()?.addFeature(feature);
     }
 
     toggleRoute() {
-        throw new Error('Method not implemented.');
+        this.routeLayer.setVisible(this.showRouteOn ? true : false);
     }
 }

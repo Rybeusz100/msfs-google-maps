@@ -3,9 +3,9 @@ import Position from '../lib/position';
 import BaseMap from './baseMap';
 
 export default class GoogleMap extends BaseMap {
-    map?: google.maps.Map;
-    svgMarker?: ISVGMarker;
-    planeMarker?: google.maps.Marker;
+    map!: google.maps.Map;
+    svgMarker!: ISVGMarker;
+    planeMarker!: google.maps.Marker;
     airports: google.maps.Marker[];
     infoWindow: google.maps.InfoWindow;
     visualRoute: google.maps.Polyline[];
@@ -18,7 +18,7 @@ export default class GoogleMap extends BaseMap {
         this.infoWindow = new google.maps.InfoWindow();
         this.visualRoute = [];
 
-        this.map?.addListener('drag', () => {
+        this.map.addListener('drag', () => {
             this.pauseFollow();
         });
 
@@ -127,7 +127,7 @@ export default class GoogleMap extends BaseMap {
                 strokeWeight: 5,
             });
             if (this.showRouteOn) {
-                segment.setMap(this.map!);
+                segment.setMap(this.map);
             }
             this.visualRoute.push(segment);
             return;
@@ -147,7 +147,7 @@ export default class GoogleMap extends BaseMap {
                 strokeWeight: 5,
             });
             if (this.showRouteOn) {
-                segment.setMap(this.map!);
+                segment.setMap(this.map);
             }
             this.visualRoute.push(segment);
         }
@@ -155,7 +155,7 @@ export default class GoogleMap extends BaseMap {
 
     toggleRoute() {
         this.visualRoute.forEach((seg) => {
-            seg.setMap(this.showRouteOn ? this.map! : null);
+            seg.setMap(this.showRouteOn ? this.map : null);
         });
     }
 
@@ -163,14 +163,14 @@ export default class GoogleMap extends BaseMap {
         if (typeof this.route.at(-1) !== 'undefined') {
             this.position = this.route.at(-1)!;
 
-            this.svgMarker!.rotation = this.position.hdg;
-            this.planeMarker?.setIcon(this.svgMarker);
+            this.svgMarker.rotation = this.position.hdg;
+            this.planeMarker.setIcon(this.svgMarker);
 
             let newLatLng = new google.maps.LatLng(this.position.lat, this.position.lon);
-            this.planeMarker?.setPosition(newLatLng);
+            this.planeMarker.setPosition(newLatLng);
 
             if (this.followOn && !this.followPaused) {
-                this.map?.setCenter(newLatLng);
+                this.map.panTo(newLatLng);
             }
         }
     }
