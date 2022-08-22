@@ -22,14 +22,8 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
         let route = route.clone();
         // let mut fake_route = FakeRoute::new(
         //     Position {
-        //         lat: 50.049683,
-        //         lon: 19.944544,
-        //         alt: 0f64,
-        //         hdg: 0f64,
-        //     },
-        //     Position {
-        //         lat: 40.730610,
-        //         lon: -73.935242,
+        //         lat: 50.076707070424845,
+        //         lon: 19.778160533188096,
         //         alt: 0f64,
         //         hdg: 0f64,
         //     },

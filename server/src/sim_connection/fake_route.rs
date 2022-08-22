@@ -1,3 +1,5 @@
+use rand::Rng;
+
 use super::Position;
 
 const RADIUS: f64 = 6371f64;
@@ -5,31 +7,34 @@ const RADIUS: f64 = 6371f64;
 #[allow(dead_code)]
 pub struct FakeRoute {
     start_pos: Position,
-    end_pos: Position,
     current_pos: Position,
     max_alt: f64,
     asc: f64,
+    counter: u8,
+    turn: f64,
 }
 
 #[allow(dead_code)]
 impl FakeRoute {
-    pub fn new(start_pos: Position, end_pos: Position) -> FakeRoute {
+    pub fn new(start_pos: Position) -> FakeRoute {
         let current_pos = Position {
             lat: start_pos.lat,
             lon: start_pos.lon,
             alt: start_pos.alt,
-            hdg: bearing(&start_pos, &end_pos),
+            hdg: 77.0,
         };
         FakeRoute {
             start_pos,
-            end_pos,
             current_pos,
             max_alt: 55000f64,
             asc: 1f64,
+            counter: 50,
+            turn: 0.0,
         }
     }
 
     pub fn get_position(&mut self) -> Position {
+        self.set_heading();
         self.current_pos = pos_from_dir(&self.current_pos, self.current_pos.hdg, 0.3);
         self.current_pos.alt += 50f64 * self.asc;
         if self.current_pos.alt < 10f64 {
@@ -39,8 +44,18 @@ impl FakeRoute {
         }
         self.current_pos.clone()
     }
+
+    fn set_heading(&mut self) {
+        self.counter -= 1;
+        if self.counter == 0 {
+            self.counter = 20;
+            self.turn = rand::thread_rng().gen_range(-5..=5) as f64;
+        }
+        self.current_pos.hdg += self.turn;
+    }
 }
 
+#[allow(dead_code)]
 fn bearing(start_pos: &Position, end_pos: &Position) -> f64 {
     let delta_lon = end_pos.lon - start_pos.lon;
     let x = end_pos.lat.cos() * delta_lon.sin();
