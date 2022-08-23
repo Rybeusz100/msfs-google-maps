@@ -22,7 +22,7 @@ export default class GoogleMap extends BaseMap {
             this.pauseFollow();
         });
 
-        this.updateIntervalID = window.setInterval(() => this.update(), 1000);
+        this.updateIntervalID = window.setInterval(() => this.updateRoute(), 1000);
     }
 
     createMap() {
@@ -84,30 +84,8 @@ export default class GoogleMap extends BaseMap {
         this.airports = [];
     }
 
-    update() {
-        this.updateRoute();
-    }
-
-    updateRoute() {
-        this.getRoutePoints(this.route.length, (resRoute) => {
-            if (this.routeID !== resRoute.id) {
-                this.routeID = resRoute.id;
-                this.clearRoute();
-            } else {
-                resRoute.points.forEach((point) => {
-                    let pos = new Position(point.lat, point.lon, point.alt, point.hdg);
-                    this.route.push(pos);
-
-                    this.updateVisualRoute();
-                });
-                this.updatePosition();
-            }
-        });
-    }
-
     clearRoute() {
         this.route = [];
-
         this.visualRoute.forEach((seg) => {
             seg.setMap(null);
         });
@@ -115,7 +93,6 @@ export default class GoogleMap extends BaseMap {
     }
 
     updateVisualRoute() {
-        const breakDiff = 300;
         let current = this.route.at(-1)!;
         let newLatLng = new google.maps.LatLng(current.lat, current.lon);
 
@@ -136,7 +113,7 @@ export default class GoogleMap extends BaseMap {
         let previous = this.route.at(-2)!;
         let lastPath = this.visualRoute.at(-1)!.getPath();
 
-        if (Math.floor(previous.alt / breakDiff) === Math.floor(current.alt / breakDiff)) {
+        if (Math.floor(previous.alt / this.colorBreakDiff) === Math.floor(current.alt / this.colorBreakDiff)) {
             lastPath.push(newLatLng);
         } else {
             let coordinates = [new google.maps.LatLng(previous.lat, previous.lon), newLatLng];

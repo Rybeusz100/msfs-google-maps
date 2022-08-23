@@ -7,7 +7,6 @@ import { Icon, Stroke, Style } from 'ol/style';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { fromLonLat } from 'ol/proj';
-import Position from '../lib/position';
 import { degToRad } from '../lib/utils';
 import LineString from 'ol/geom/LineString';
 
@@ -30,7 +29,7 @@ export default class OpenStreetMap extends BaseMap {
             this.pauseFollow();
         });
 
-        this.updateIntervalID = window.setInterval(() => this.update(), 1000);
+        this.updateIntervalID = window.setInterval(() => this.updateRoute(), 1000);
     }
 
     createRouteLayer() {
@@ -92,10 +91,6 @@ export default class OpenStreetMap extends BaseMap {
         throw new Error('Method not implemented.');
     }
 
-    update() {
-        this.updateRoute();
-    }
-
     updatePosition() {
         if (typeof this.route.at(-1) !== 'undefined') {
             this.position = this.route.at(-1)!;
@@ -109,22 +104,6 @@ export default class OpenStreetMap extends BaseMap {
         }
     }
 
-    updateRoute() {
-        this.getRoutePoints(this.route.length, (resRoute) => {
-            if (this.routeID !== resRoute.id) {
-                this.routeID = resRoute.id;
-                this.clearRoute();
-            } else {
-                resRoute.points.forEach((point) => {
-                    let pos = new Position(point.lat, point.lon, point.alt, point.hdg);
-                    this.route.push(pos);
-                    this.updateVisualRoute();
-                });
-                this.updatePosition();
-            }
-        });
-    }
-
     clearRoute() {
         this.route = [];
         this.routeLayer.getSource()?.forEachFeature((f) => {
@@ -133,7 +112,6 @@ export default class OpenStreetMap extends BaseMap {
     }
 
     updateVisualRoute() {
-        const breakDiff = 300;
         let current = this.route.at(-1)!;
         let routeStyle: any;
 
@@ -148,7 +126,7 @@ export default class OpenStreetMap extends BaseMap {
         } else {
             let previous = this.route.at(-2)!;
 
-            if (Math.floor(previous.alt / breakDiff) === Math.floor(current.alt / breakDiff)) {
+            if (Math.floor(previous.alt / this.colorBreakDiff) === Math.floor(current.alt / this.colorBreakDiff)) {
                 this.lastSegmentPoints += 1;
                 routeStyle = this.prevFeature.getStyle();
                 this.routeLayer.getSource()?.removeFeature(this.prevFeature);

@@ -12,6 +12,7 @@ export default abstract class BaseMap {
     showRouteOn: boolean;
     routeID: string;
     updateIntervalID?: number;
+    colorBreakDiff: number = 300;
 
     constructor(followOn: boolean, showRouteOn: boolean) {
         this.position = new Position(0, 0, 0, 0);
@@ -100,13 +101,28 @@ export default abstract class BaseMap {
         }, 5000);
     }
 
-    abstract createMap(): void;
+    updateRoute() {
+        this.getRoutePoints(this.route.length, (resRoute) => {
+            if (this.routeID !== resRoute.id) {
+                this.routeID = resRoute.id;
+                this.clearRoute();
+            } else {
+                resRoute.points.forEach((point) => {
+                    let pos = new Position(point.lat, point.lon, point.alt, point.hdg);
+                    this.route.push(pos);
+
+                    this.updateVisualRoute();
+                });
+                this.updatePosition();
+            }
+        });
+    }
+
     abstract markAirports(radius: number): void;
     abstract clearAirports(): void;
 
-    abstract update(): void;
     abstract updatePosition(): void;
-    abstract updateRoute(): void;
+    abstract updateVisualRoute(): void;
     abstract clearRoute(): void;
     abstract toggleRoute(): void;
 }
