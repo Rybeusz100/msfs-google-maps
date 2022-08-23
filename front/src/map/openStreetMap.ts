@@ -1,5 +1,5 @@
 import BaseMap from './baseMap';
-import { Feature, Map, View } from 'ol';
+import { Feature, Map, MapBrowserEvent, Overlay, View } from 'ol';
 import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import { Point } from 'ol/geom';
@@ -14,22 +14,37 @@ export default class OpenStreetMap extends BaseMap {
     map!: Map;
     planeMarker!: Feature<Point>;
     planeStyle!: Style;
+    airportsLayer!: VectorLayer<VectorSource<Point>>;
     routeLayer!: VectorLayer<VectorSource<LineString>>;
     lastSegmentPoints!: number;
     prevFeature!: Feature<LineString>;
+    popup!: Overlay;
+    hitTolerance: number = 7;
 
     constructor(followOn: boolean, showRouteOn: boolean) {
         super(followOn, showRouteOn);
 
         this.createMap();
         this.createRouteLayer();
+        this.createAirportsLayer();
         this.createMarker();
+        this.createPopup();
 
         this.map.on('pointerdrag', () => {
             this.pauseFollow();
         });
 
+        this.map.on('click', (e) => this.displayPopup(e));
+        this.map.on('pointermove', (e) => this.onPointerMove(e));
+
         this.updateIntervalID = window.setInterval(() => this.updateRoute(), 1000);
+    }
+
+    createAirportsLayer() {
+        this.airportsLayer = new VectorLayer({
+            source: new VectorSource(),
+        });
+        this.map.addLayer(this.airportsLayer);
     }
 
     createRouteLayer() {
@@ -55,6 +70,20 @@ export default class OpenStreetMap extends BaseMap {
                 zoom: 3,
             }),
         });
+    }
+
+    createPopup() {
+        if (!document.getElementById('OSM-popup')) {
+            const el = document.createElement('div');
+            el.id = 'OSM-popup';
+            document.getElementById('map')!.appendChild(el);
+        }
+        this.popup = new Overlay({
+            element: document.getElementById('OSM-popup')!,
+            positioning: 'bottom-center',
+            stopEvent: false,
+        });
+        this.map.addOverlay(this.popup);
     }
 
     createMarker() {
@@ -84,11 +113,51 @@ export default class OpenStreetMap extends BaseMap {
     }
 
     markAirports(radius: number) {
-        throw new Error('Method not implemented.');
+        this.clearAirports();
+        this.getAirports(this.position.lat, this.position.lon, radius, (airports) => {
+            airports.forEach((airport) => {
+                const marker = new Feature({
+                    geometry: new Point(fromLonLat([airport.longitude_deg, airport.latitude_deg])),
+                    name: `<h2>${airport.name}</h2><b>type: ${airport.type.replace('_', ' ')}`,
+                });
+                const markerStyle = new Style({
+                    image: new Icon({
+                        scale: 1,
+                        src: `/images/${airport.type}.png`,
+                    }),
+                });
+                marker.setStyle(markerStyle);
+
+                this.airportsLayer.getSource()?.addFeature(marker);
+            });
+        });
     }
 
     clearAirports() {
-        throw new Error('Method not implemented.');
+        this.airportsLayer.getSource()?.forEachFeature((f) => {
+            this.airportsLayer.getSource()?.removeFeature(f);
+        });
+    }
+
+    displayPopup(e: MapBrowserEvent<any>) {
+        const feature = this.map.forEachFeatureAtPixel(e.pixel, (f) => f, {
+            hitTolerance: this.hitTolerance,
+        });
+        if (feature) {
+            this.popup.setPosition(e.coordinate);
+            this.popup.getElement()!.innerHTML = feature.getProperties().name ? feature.getProperties().name : '';
+            this.popup.getElement()!.style.display = feature.getProperties().name ? '' : 'none';
+        } else {
+            this.popup.getElement()!.innerHTML = '';
+            this.popup.getElement()!.style.display = 'none';
+        }
+    }
+
+    onPointerMove(e: MapBrowserEvent<any>) {
+        const feature = this.map.forEachFeatureAtPixel(e.pixel, (f) => f, {
+            hitTolerance: this.hitTolerance,
+        });
+        document.getElementById('map')!.style.cursor = feature?.getProperties().name ? 'pointer' : '';
     }
 
     updatePosition() {

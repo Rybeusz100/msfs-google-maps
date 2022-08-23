@@ -92,6 +92,8 @@ function startApp(mode: Mode) {
 }
 
 function changeMode() {
+    showAirportsBtn.setAttribute('shown', 'false');
+    showAirportsBtn.innerText = 'Show airports';
     map.removeMap();
     mode = mode === Mode.GoogleMaps ? Mode.OpenStreetMap : Mode.GoogleMaps;
     localStorage.setItem('mode', mode.toString());

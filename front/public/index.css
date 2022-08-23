@@ -93,6 +93,12 @@ body {
     height: 40px;
 }
 
+#OSM-popup {
+    background-color: white;
+    border-radius: 8px;
+    padding: 12px;
+}
+
 /* NUMBER INPUT FIELD */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

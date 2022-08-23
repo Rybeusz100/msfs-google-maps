@@ -62,7 +62,7 @@ export default class GoogleMap extends BaseMap {
                 let marker = new google.maps.Marker({
                     position: new google.maps.LatLng(airport.latitude_deg, airport.longitude_deg),
                     map: this.map,
-                    icon: './images/' + airport.type + '.png',
+                    icon: `./images/${airport.type}.png`,
                     title: `<h2>${airport.name}</h2><b>type: ${airport.type.replace('_', ' ')}`,
                 });
 
