@@ -6,11 +6,13 @@ use std::{
 };
 
 mod enums;
-// mod fake_route;
+#[cfg(feature = "fake_route")]
+mod fake_route;
 mod structs;
 
 pub use enums::*;
-// use fake_route::FakeRoute;
+#[cfg(feature = "fake_route")]
+use fake_route::FakeRoute;
 pub use structs::*;
 
 pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
@@ -20,17 +22,24 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
     let handle;
     {
         let route = route.clone();
-        // let mut fake_route = FakeRoute::new(
-        //     Position {
-        //         lat: 50.076707070424845,
-        //         lon: 19.778160533188096,
-        //         alt: 0f64,
-        //         hdg: 0f64,
-        //     },
-        // );
+        #[cfg(feature = "fake_route")]
+        let mut fake_route = FakeRoute::new(Position {
+            lat: 50.076707070424845,
+            lon: 19.778160533188096,
+            alt: 0f64,
+            hdg: 0f64,
+        });
         handle = thread::spawn(move || 'thread: loop {
-            // route.lock().unwrap().add_point(fake_route.get_position());
-            // thread::sleep(Duration::from_millis(500));
+            #[cfg(feature = "fake_route")]
+            {
+                if let Ok(Message::Stop) = rx.try_recv() {
+                    info!("Message::Stop received, stopping simconnect");
+                    break 'thread;
+                }
+                route.lock().unwrap().add_point(fake_route.get_position());
+                thread::sleep(Duration::from_millis(500));
+                continue 'thread;
+            }
 
             let mut conn = simconnect::SimConnector::new();
             while !conn.connect("msfs-google-map") {
