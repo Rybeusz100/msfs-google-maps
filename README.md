@@ -7,7 +7,7 @@
 * [Troubleshooting](#troubleshooting)
 * [Development setup](#development-setup)
 * [Screenshots](#screenshots)
----
+
 ## General info
 A web application that allows to monitor your flight on an interactive map from any device with a web browser.
 
@@ -15,7 +15,7 @@ Features:
 - Google Maps and OpenStreetMap support
 - Displaying route with different colors indicating aircraft's altitude (inspired by [Flightradar24](https://www.flightradar24.com/))
 - Finding and displaying airports within a specified distance from the aircraft
----
+
 ## How to use
 ### Installing
 1. Download the latest release from [flightsim.to](https://flightsim.to/file/28216/google-map-for-msfs) or [GitHub](https://github.com/Rybeusz100/msfs-google-maps/releases)
@@ -28,11 +28,10 @@ Features:
 ### Updating
 1. Delete the folder containing all of this program's files
 1. Follow the installation guide again
----
+
 ## Troubleshooting
 If your Google Maps view is grayed out and `For development purposes only` message is displayed, you'll need to provide a Google Maps API key, you can get a free trial [here](https://developers.google.com/maps) (the key has to have access to the Maps JavaScript API). After you've obtained your key, you can simply copy and paste it into `api_key.txt` file located inside your extracted folder. After your free trial has expired, you can still use the Google Maps API for free, as long as you don't exceed 200$ a month (which should be more than enough for personal use) or you can always use OpenStreetMap for free without providing any additional stuff.
 
----
 ## Development setup
 ### Requirements
 - [Rustup](https://www.rust-lang.org/tools/install)
@@ -54,17 +53,17 @@ npm start
 cargo run --features fake_route
 ```
 4. To build the optimized version, run the `build.ps1` script
----
+
 ## Screenshots
 <table>
     <tr>
-        <td colspan="2" style="border: none;"><img src="./screenshots/desktop.png"></img></td>
+        <td colspan="2"><img src="./screenshots/desktop.png"></img></td>
     </tr>
     <tr>
-        <td colspan="2" style="border: none;"><img src="./screenshots/airports.png"></img></td>
+        <td colspan="2"><img src="./screenshots/airports.png"></img></td>
     </tr>
     <tr>
-        <td valign="top" style="border: none;"><img src="./screenshots/mobile-OSM.jpg"></img></td>
-        <td valign="top" style="border: none;"><img src="./screenshots/mobile-menu.jpg"></img></td>
+        <td valign="top"><img src="./screenshots/mobile-OSM.jpg"></img></td>
+        <td valign="top"><img src="./screenshots/mobile-menu.jpg"></img></td>
     </tr>
 </table>
