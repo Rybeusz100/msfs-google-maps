@@ -56,11 +56,15 @@ cargo run --features fake_route
 4. To build the optimized version, run the `build.ps1` script
 ---
 ## Screenshots
-<div style="width: 100%; display: flex; flex-wrap: wrap; justify-content: center;">
-    <img src="./screenshots/desktop.png" style="margin-bottom: 10px;"></img>
-    <img src="./screenshots/airports.png" style="margin-bottom: 10px;"></img>
-    <div style="width: 100%; display: flex; justify-content: space-between; align-items: top;">
-        <img src="./screenshots/mobile-OSM.jpg" width="49%"></img>
-        <img src="./screenshots/mobile-menu.jpg" width="49%"></img>
-    </div>
-</div>
+<table>
+    <tr>
+        <td colspan="2" style="border: none;"><img src="./screenshots/desktop.png"></img></td>
+    </tr>
+    <tr>
+        <td colspan="2" style="border: none;"><img src="./screenshots/airports.png"></img></td>
+    </tr>
+    <tr>
+        <td valign="top" style="border: none;"><img src="./screenshots/mobile-OSM.jpg"></img></td>
+        <td valign="top" style="border: none;"><img src="./screenshots/mobile-menu.jpg"></img></td>
+    </tr>
+</table>
