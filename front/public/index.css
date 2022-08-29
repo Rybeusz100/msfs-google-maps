@@ -94,9 +94,26 @@ body {
 }
 
 #OSM-popup {
+    padding-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#OSM-popup div {
     background-color: white;
     border-radius: 8px;
     padding: 12px;
+}
+
+#OSM-popup::after {
+    transform: translateY(-5px);
+    content: '';
+    width: 0; 
+    height: 0; 
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid white;
 }
 
 /* NUMBER INPUT FIELD */

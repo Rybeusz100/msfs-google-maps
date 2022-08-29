@@ -118,7 +118,7 @@ export default class OpenStreetMap extends BaseMap {
             airports.forEach((airport) => {
                 const marker = new Feature({
                     geometry: new Point(fromLonLat([airport.longitude_deg, airport.latitude_deg])),
-                    name: `<h2>${airport.name}</h2><b>type: ${airport.type.replace('_', ' ')}`,
+                    name: `<div><h2>${airport.name}</h2><b>type: ${airport.type.replace('_', ' ')}</div>`,
                 });
                 const markerStyle = new Style({
                     image: new Icon({
@@ -137,18 +137,18 @@ export default class OpenStreetMap extends BaseMap {
         this.airportsLayer.getSource()?.forEachFeature((f) => {
             this.airportsLayer.getSource()?.removeFeature(f);
         });
+        this.popup.getElement()!.style.display = 'none';
     }
 
     displayPopup(e: MapBrowserEvent<any>) {
         const feature = this.map.forEachFeatureAtPixel(e.pixel, (f) => f, {
             hitTolerance: this.hitTolerance,
         });
-        if (feature) {
-            this.popup.setPosition(e.coordinate);
+        if (feature && feature.getGeometry()?.getType() === 'Point') {
+            this.popup.setPosition((feature.getGeometry() as Point).getCoordinates());
             this.popup.getElement()!.innerHTML = feature.getProperties().name ? feature.getProperties().name : '';
             this.popup.getElement()!.style.display = feature.getProperties().name ? '' : 'none';
         } else {
-            this.popup.getElement()!.innerHTML = '';
             this.popup.getElement()!.style.display = 'none';
         }
     }
