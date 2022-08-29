@@ -4,7 +4,6 @@ use super::Position;
 
 const RADIUS: f64 = 6371f64;
 
-#[allow(dead_code)]
 pub struct FakeRoute {
     start_pos: Position,
     current_pos: Position,
@@ -14,7 +13,6 @@ pub struct FakeRoute {
     turn: f64,
 }
 
-#[allow(dead_code)]
 impl FakeRoute {
     pub fn new(start_pos: Position) -> FakeRoute {
         let current_pos = Position {
@@ -55,7 +53,6 @@ impl FakeRoute {
     }
 }
 
-#[allow(dead_code)]
 fn bearing(start_pos: &Position, end_pos: &Position) -> f64 {
     let delta_lon = end_pos.lon - start_pos.lon;
     let x = end_pos.lat.cos() * delta_lon.sin();

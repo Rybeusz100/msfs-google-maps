@@ -4,7 +4,6 @@ use uuid::Uuid;
 
 use super::enums::*;
 
-#[allow(dead_code)]
 #[derive(Debug, Serialize, Clone)]
 pub struct Position {
     pub lat: f64,
