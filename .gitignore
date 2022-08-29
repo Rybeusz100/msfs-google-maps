@@ -1,5 +1,6 @@
-.venv/
-__pycache__/
-api_key.txt
-run.bat
-*.pyd
+server/api_key.txt
+server/target
+dist
+front/.snowpack
+front/build
+front/node_modules

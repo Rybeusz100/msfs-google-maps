@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./images/plane_icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="./index.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <title>Map</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script type="module" src="./dist/index.js" defer></script>
+
+    <div class="map-wrapper">
+      <!-- topnav -->
+      <div class="topnav noselect">
+        <div class="topnav-section">
+          <div class="topnav-item">
+            <input type="checkbox" id="follow" checked>
+            <label for="follow">Follow</label>
+          </div>
+
+          <div class="topnav-item">
+            <input type="checkbox" id="noSleep">
+            <label for="noSleep">Keep screen on</label>
+          </div>
+
+          <div class="topnav-item">
+            <input type="checkbox" id="showRoute" checked>
+            <label for="showRoute">Show flight route</label>
+          </div>
+
+          <div class="topnav-item topnav-center">
+            <button id="clearRoute">Clear route</button>
+          </div>
+
+          <div class="topnav-item topnav-center">
+            <button id="showAirports">Show airports</button>
+          </div>
+
+          <div class="topnav-item">
+            <label for="radius">Radius (km):</label>
+            <input type="number" id="radius" value="100">
+          </div>
+        </div>
+
+        <div class="topnav-section topnav-end">
+          <div class="topnav-item">
+            <button id="changeMode" class="fa fa-map" title="Change map mode"></button>
+          </div>
+          
+          <div class="topnav-item">
+            <button id="shutdown" class="fa fa-power-off" title="Shutdown server"></button>
+          </div>
+        </div>
+
+        <div class="gear-wrapper">
+          <i id="settings-gear" class="fa fa-gear fa-2x"></i>
+        </div>
+      </div>
+      <!------------>
+
+      <div id="map"></div>
+    </div>
+  </body>
+</html>
