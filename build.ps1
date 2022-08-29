@@ -11,7 +11,7 @@ cd ..
 cp server/target/release/server.exe dist/
 cp server/Rocket.toml dist/
 cp server/SimConnect.dll dist/
-cp -r server/airports.json dist/
+cp -r server/assets dist/assets
 
 cd front
 npm run build
