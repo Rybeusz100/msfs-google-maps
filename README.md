@@ -59,7 +59,7 @@ cargo run --features fake_route
 <div style="display: flex; flex-wrap: wrap; justify-content: center;">
     <img src="./screenshots/desktop.png" style="margin-bottom: 10px;"></img>
     <img src="./screenshots/airports.png" style="margin-bottom: 10px;"></img>
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display: flex; justify-content: space-between; align-items: top;">
         <img src="./screenshots/mobile-OSM.jpg" width="49%"></img>
         <img src="./screenshots/mobile-menu.jpg" width="49%"></img>
     </div>
