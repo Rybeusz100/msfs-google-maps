@@ -122,7 +122,7 @@ export default class OpenStreetMap extends BaseMap {
                 });
                 const markerStyle = new Style({
                     image: new Icon({
-                        scale: 1,
+                        scale: 0.7,
                         src: `/images/${airport.type}.png`,
                     }),
                 });
