@@ -21,7 +21,7 @@ Features:
 1. Download the latest release from [flightsim.to](https://flightsim.to/file/28216/google-map-for-msfs) or [GitHub](https://github.com/Rybeusz100/msfs-google-maps/releases)
 1. Unzip the downloaded file
 ### Starting
-1. Navigate to the extracted folder and double click on the server.exe file
+1. Navigate to the extracted folder and run the maps-server.exe file
 1. When prompted, allow for the access through firewall, otherwise you won't be able to open the map from other devices
 1. Follow the information displayed on screen
 1. As soon as you start your flight in Flight Simulator, you should see the aircraft properly displayed on the map
