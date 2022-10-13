@@ -28,6 +28,7 @@ export default class OpenStreetMap extends BaseMap {
 
     constructor(followOn: boolean, showRouteOn: boolean) {
         super(followOn, showRouteOn);
+        this.updateRoute();
 
         this.createMap();
         this.createRouteLayer();

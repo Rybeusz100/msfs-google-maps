@@ -56,6 +56,7 @@ async fn main() {
                 .service(position)
                 .service(position_known)
                 .service(api_key)
+                .service(maptiler_config)
                 .service(get_airports)
                 .service(management)
                 .service(status)

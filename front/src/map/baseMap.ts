@@ -26,8 +26,6 @@ export default abstract class BaseMap {
         this.followPaused = false;
         this.showRouteOn = showRouteOn;
         this.routeID = '';
-
-        this.updateRoute();
     }
 
     removeMap() {

@@ -29,6 +29,25 @@ export function management(command: ManagementCommand) {
     fetch(API_URL + '/management', options);
 }
 
+export async function getMaptilerConfig(): Promise<MaptilerConfig> {
+    try {
+        const response = await fetch(API_URL + '/maptiler_config');
+        if (response.ok) {
+            return await response.json();
+        } else {
+            throw new Error(response.statusText);
+        }
+    } catch (error) {
+        console.error('Error retrieving Maptiler config:', error);
+    }
+    return {};
+}
+
+export interface MaptilerConfig {
+    apiKey?: string;
+    styleId?: string;
+}
+
 export function lerpColor(a: number, b: number, amount: number) {
     const ar = (a & 0xff0000) >> 16,
         ag = (a & 0x00ff00) >> 8,

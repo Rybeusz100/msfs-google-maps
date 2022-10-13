@@ -11,6 +11,8 @@ export default class GoogleMap extends BaseMap {
 
     constructor(followOn: boolean, showRouteOn: boolean) {
         super(followOn, showRouteOn);
+        this.updateRoute();
+
         this.createMap();
         this.createMarker();
         this.airports = [];
