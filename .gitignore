@@ -4,3 +4,6 @@ dist
 front/.snowpack
 front/build
 front/node_modules
+
+# IntelliJ metadata
+/.idea/
