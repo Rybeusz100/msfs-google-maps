@@ -34,7 +34,7 @@ If your Google Maps view is grayed out and `For development purposes only` messa
 
 ## Development setup
 ### Requirements
-- [Rustup](https://www.rust-lang.org/tools/install)
+- [Rust 1.63](https://www.rust-lang.org/tools/install)
 - [Clang](https://rust-lang.github.io/rust-bindgen/requirements.html)
 - [Node.js](https://nodejs.org)
 
