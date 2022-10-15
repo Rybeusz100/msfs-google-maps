@@ -1,5 +1,4 @@
 import type { ISVGMarker } from '../lib/interfaces';
-import Position from '../lib/position';
 import BaseMap from './baseMap';
 
 export default class GoogleMap extends BaseMap {

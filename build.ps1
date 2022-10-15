@@ -17,6 +17,6 @@ cd front
 npm run build
 cd ..
 
-cp -r front/build/ dist/front
+cp -r front/dist/ dist/front
 
 New-Item -Path "dist" -Name "api_key.txt"
