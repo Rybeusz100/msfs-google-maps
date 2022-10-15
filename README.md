@@ -38,6 +38,9 @@ If your Google Maps view is grayed out and `For development purposes only` messa
 - [Clang](https://rust-lang.github.io/rust-bindgen/requirements.html)
 - [Node.js](https://nodejs.org)
 
+### Google Maps API key
+You can place your key in the server/api_key.txt file
+
 ### Starting
 1. Inside `server` directory
 ```
@@ -46,7 +49,7 @@ cargo run
 2. Inside `front` directory
 ```
 npm install
-npm start
+npm run dev
 ```
 3. Optionally, you can start the server with a feature to make it return some data about plane's position, so that you don't need to have the simulator running
 ```

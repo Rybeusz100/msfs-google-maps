@@ -1,8 +1,6 @@
 server/api_key.txt
 server/target
 dist
-front/.snowpack
-front/build
 front/node_modules
 
 # IntelliJ metadata

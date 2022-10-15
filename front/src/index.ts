@@ -1,4 +1,4 @@
-import './index.css'
+import './index.css';
 import NoSleep from 'nosleep.js';
 import GoogleMap from './map/googleMap';
 import loadGoogleMaps from './map/googleMapsLoader';
