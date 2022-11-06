@@ -152,6 +152,7 @@ export default class OpenStreetMap extends BaseMap {
             this.popup.getElement()!.innerHTML = feature.getProperties().name ? feature.getProperties().name : '';
             this.popup.getElement()!.style.display = feature.getProperties().name ? '' : 'none';
             this.selectedAirport = feature.getProperties().airport;
+            this.updateSelectedAirportData();
         } else {
             this.popup.getElement()!.style.display = 'none';
         }
@@ -229,7 +230,7 @@ export default class OpenStreetMap extends BaseMap {
 
     updateSelectedAirportDisplayedData(toReplace: string) {
         const currentInfo = this.popup.getElement()!.innerHTML;
-        const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">.*?<\/div>/, toReplace);
+        const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">[\s\S]*?<\/div>/, toReplace);
         this.popup.getElement()!.innerHTML = newInfo;
     }
 }

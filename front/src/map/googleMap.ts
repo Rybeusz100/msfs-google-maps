@@ -76,6 +76,7 @@ export default class GoogleMap extends BaseMap {
                     this.infoWindow.setContent(marker.getTitle());
                     this.infoWindow.open(marker.getMap(), marker);
                     this.selectedAirport = airport;
+                    this.updateSelectedAirportData();
                 });
 
                 this.airports.push(marker);
@@ -160,7 +161,7 @@ export default class GoogleMap extends BaseMap {
 
     updateSelectedAirportDisplayedData(toReplace: string) {
         const currentInfo = this.infoWindow.getContent();
-        const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">.*?<\/div>/, toReplace);
+        const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">[\s\S]*?<\/div>/, toReplace);
         this.infoWindow.setContent(newInfo);
     }
 }
