@@ -65,13 +65,17 @@ export default class GoogleMap extends BaseMap {
                         url: `./images/${airport.type}.png`,
                         scaledSize: new google.maps.Size(35, 35),
                     },
-                    title: `<h2>${airport.name}</h2><b>type: ${airport.type.replace('_', ' ')}`,
+                    title: `<h2>${airport.name}</h2><b>${airport.ident}<br>${airport.type.replace(
+                        '_',
+                        ' ',
+                    )}<div id="dynamic-airport-data"></div></b>`,
                 });
 
                 marker.addListener('click', () => {
                     this.infoWindow.close();
                     this.infoWindow.setContent(marker.getTitle());
                     this.infoWindow.open(marker.getMap(), marker);
+                    this.selectedAirport = airport;
                 });
 
                 this.airports.push(marker);
@@ -152,5 +156,11 @@ export default class GoogleMap extends BaseMap {
                 this.map.panTo(newLatLng);
             }
         }
+    }
+
+    updateSelectedAirportDisplayedData(toReplace: string) {
+        const currentInfo = this.infoWindow.getContent();
+        const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">.*?<\/div>/, toReplace);
+        this.infoWindow.setContent(newInfo);
     }
 }

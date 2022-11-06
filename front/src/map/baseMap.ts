@@ -2,6 +2,7 @@ import { hexToColor, lerpColor } from '../lib/utils';
 import { API_URL, colorAltMap } from '../lib/constants';
 import type { IAirport, IResponseRoute } from '../lib/interfaces';
 import Position from '../lib/position';
+import { headingDistanceTo } from 'geolocation-utils';
 
 export default abstract class BaseMap {
     position: Position;
@@ -13,6 +14,7 @@ export default abstract class BaseMap {
     routeID: string;
     updateIntervalID?: number;
     colorBreakDiff: number = 300;
+    selectedAirport?: IAirport;
 
     constructor(followOn: boolean, showRouteOn: boolean) {
         this.position = new Position(0, 0, 0, 0);
@@ -114,8 +116,22 @@ export default abstract class BaseMap {
                     this.updateVisualRoute();
                 });
                 this.updatePosition();
+                this.updateSelectedAirportData();
             }
         });
+    }
+
+    updateSelectedAirportData() {
+        if (!this.selectedAirport) return;
+        const data = headingDistanceTo(this.position, {
+            lat: this.selectedAirport.latitude_deg,
+            lon: this.selectedAirport.longitude_deg,
+        });
+        const heading = data.heading < 0 ? data.heading + 360 : data.heading;
+        const distance = data.distance / 1000;
+        const toReplace = `<div id="dynamic-airport-data">heading: ${Math.round(heading)}°
+        <br>distance: ${distance.toFixed(3)} km</div>`;
+        this.updateSelectedAirportDisplayedData(toReplace);
     }
 
     abstract markAirports(radius: number): void;
@@ -125,4 +141,5 @@ export default abstract class BaseMap {
     abstract updateVisualRoute(): void;
     abstract clearRoute(): void;
     abstract toggleRoute(): void;
+    abstract updateSelectedAirportDisplayedData(toReplace: string): void;
 }

@@ -100,7 +100,7 @@ body {
     align-items: center;
 }
 
-#OSM-popup div {
+#OSM-popup-data {
     background-color: white;
     border-radius: 8px;
     padding: 12px;

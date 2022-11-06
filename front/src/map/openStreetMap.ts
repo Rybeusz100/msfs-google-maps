@@ -118,7 +118,10 @@ export default class OpenStreetMap extends BaseMap {
             airports.forEach((airport) => {
                 const marker = new Feature({
                     geometry: new Point(fromLonLat([airport.longitude_deg, airport.latitude_deg])),
-                    name: `<div><h2>${airport.name}</h2><b>type: ${airport.type.replace('_', ' ')}</div>`,
+                    name: `<div id="OSM-popup-data"><h2>${airport.name}</h2><b>${
+                        airport.ident
+                    }<br>${airport.type.replace('_', ' ')}<div id="dynamic-airport-data"></div></b></div>`,
+                    airport: airport,
                 });
                 const markerStyle = new Style({
                     image: new Icon({
@@ -148,6 +151,7 @@ export default class OpenStreetMap extends BaseMap {
             this.popup.setPosition((feature.getGeometry() as Point).getCoordinates());
             this.popup.getElement()!.innerHTML = feature.getProperties().name ? feature.getProperties().name : '';
             this.popup.getElement()!.style.display = feature.getProperties().name ? '' : 'none';
+            this.selectedAirport = feature.getProperties().airport;
         } else {
             this.popup.getElement()!.style.display = 'none';
         }
@@ -221,5 +225,11 @@ export default class OpenStreetMap extends BaseMap {
 
     toggleRoute() {
         this.routeLayer.setVisible(this.showRouteOn ? true : false);
+    }
+
+    updateSelectedAirportDisplayedData(toReplace: string) {
+        const currentInfo = this.popup.getElement()!.innerHTML;
+        const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">.*?<\/div>/, toReplace);
+        this.popup.getElement()!.innerHTML = newInfo;
     }
 }
