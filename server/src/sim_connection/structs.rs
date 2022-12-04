@@ -1,14 +1,20 @@
 use serde::Serialize;
+use simconnect_sdk::SimConnectObject;
 use std::sync::{mpsc, Arc, Mutex};
 use uuid::Uuid;
 
 use super::enums::*;
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, SimConnectObject)]
+#[simconnect(period = "second")]
 pub struct Position {
+    #[simconnect(name = "PLANE LATITUDE", unit = "degrees")]
     pub lat: f64,
+    #[simconnect(name = "PLANE LONGITUDE", unit = "degrees")]
     pub lon: f64,
+    #[simconnect(name = "PLANE ALT ABOVE GROUND", unit = "feet")]
     pub alt: f64,
+    #[simconnect(name = "PLANE HEADING DEGREES TRUE", unit = "radians")]
     pub hdg: f64,
 }
 

@@ -1,5 +1,5 @@
+use simconnect_sdk::{Notification, SimConnect};
 use std::{
-    mem::transmute_copy,
     sync::{mpsc, Arc, Mutex},
     thread::{self, JoinHandle},
     time::Duration,
@@ -41,18 +41,24 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
                 continue 'thread;
             }
 
-            let mut conn = simconnect::SimConnector::new();
-            while !conn.connect("msfs-google-map") {
-                trace!("Connection to the simulator failed, retrying");
-                thread::sleep(Duration::from_millis(500));
+            let mut client;
+            loop {
+                match SimConnect::new("msfs-google-maps") {
+                    Ok(c) => {
+                        info!("Successfully created a SimConnect SDK client");
+                        client = c;
+                        break;
+                    }
+                    Err(_) => {
+                        trace!("Connection to the simulator failed, retrying");
+                    }
+                }
                 if let Ok(Message::Stop) = rx.try_recv() {
                     info!("Message::Stop received, stopping simconnect");
                     break 'thread;
                 }
+                thread::sleep(Duration::from_secs(1));
             }
-
-            info!("Connected to the simulator");
-            prepare_position_data(&conn);
 
             '_main: loop {
                 match rx.try_recv() {
@@ -67,26 +73,35 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
                     _ => (),
                 }
 
-                match conn.get_next_message() {
-                    Ok(simconnect::DispatchResult::SimobjectData(data)) => unsafe {
-                        if let DEFINE_ID_POSITION = data.dwDefineID {
-                            #[allow(unaligned_references)]
-                            let mut position: Position = transmute_copy(&data.dwData);
-                            position.hdg = position.hdg.to_degrees();
-                            if position.is_ok() {
-                                route.lock().unwrap().add_point(position);
+                match client.get_next_dispatch() {
+                    Ok(notif) => match notif {
+                        Some(Notification::Open) => {
+                            info!("Connection to the simulator opened");
+                            if client.register_object::<Position>().is_err() {
+                                warn!("Error registering simconnect data, restarting simconnect");
+                                continue 'thread;
+                            } else {
+                                info!("Successfully registered simconnect data");
                             }
                         }
+                        Some(Notification::Object(data)) => {
+                            if let Ok(mut position_data) = Position::try_from(&data) {
+                                position_data.hdg = position_data.hdg.to_degrees();
+                                if position_data.is_ok() {
+                                    route.lock().unwrap().add_point(position_data);
+                                }
+                            }
+                        }
+                        Some(Notification::Quit) => {
+                            info!("Connection ended by the simulator, restarting simconnect");
+                            continue 'thread;
+                        }
+                        _ => {}
                     },
-                    Ok(simconnect::DispatchResult::Quit(_)) => {
-                        info!("Connection ended by the simulator, restarting simconnect");
+                    Err(_) => {
+                        warn!("Error receiving data from the simulator, restarting simconnect");
                         continue 'thread;
                     }
-                    Ok(simconnect::DispatchResult::Exception(_)) => {
-                        warn!("Exception received, restarting simconnect");
-                        continue 'thread;
-                    }
-                    _ => (),
                 }
                 thread::sleep(Duration::from_millis(200));
             }
@@ -100,45 +115,4 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
             route,
         },
     )
-}
-
-fn prepare_position_data(conn: &simconnect::SimConnector) {
-    conn.add_data_definition(
-        DEFINE_ID_POSITION,
-        "PLANE LATITUDE",
-        "Degrees",
-        simconnect::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64,
-        u32::MAX,
-    );
-    conn.add_data_definition(
-        DEFINE_ID_POSITION,
-        "PLANE LONGITUDE",
-        "Degrees",
-        simconnect::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64,
-        u32::MAX,
-    );
-    conn.add_data_definition(
-        DEFINE_ID_POSITION,
-        "Plane Alt Above Ground",
-        "Feet",
-        simconnect::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64,
-        u32::MAX,
-    );
-    conn.add_data_definition(
-        DEFINE_ID_POSITION,
-        "Plane Heading Degrees True",
-        "Radians",
-        simconnect::SIMCONNECT_DATATYPE_SIMCONNECT_DATATYPE_FLOAT64,
-        u32::MAX,
-    );
-    conn.request_data_on_sim_object(
-        DEFINE_ID_POSITION,
-        DEFINE_ID_POSITION,
-        simconnect::SIMCONNECT_OBJECT_ID_USER,
-        simconnect::SIMCONNECT_PERIOD_SIMCONNECT_PERIOD_SECOND,
-        0,
-        0,
-        0,
-        0,
-    );
 }

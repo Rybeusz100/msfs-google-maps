@@ -7,7 +7,7 @@ edition = "2021"
 fake_route = []
 
 [dependencies]
-simconnect = "0.1.4"
+simconnect-sdk = { version = "0.2", features = ["derive"] }
 rocket = "0.5.0-rc.2"
 serde = "1.0.143"
 serde_json = "1.0.83"
