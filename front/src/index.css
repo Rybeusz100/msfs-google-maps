@@ -100,6 +100,21 @@ body {
     align-items: center;
 }
 
+#OSM-popup-close {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+}
+
 #OSM-popup-data {
     background-color: white;
     border-radius: 8px;

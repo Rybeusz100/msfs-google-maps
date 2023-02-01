@@ -76,14 +76,16 @@ export default class OpenStreetMap extends BaseMap {
         if (!document.getElementById('OSM-popup')) {
             const el = document.createElement('div');
             el.id = 'OSM-popup';
+            el.innerHTML = '<button id="OSM-popup-close">x</button><div id="OSM-popup-data"></div>'
             document.getElementById('map')!.appendChild(el);
         }
         this.popup = new Overlay({
             element: document.getElementById('OSM-popup')!,
             positioning: 'bottom-center',
-            stopEvent: false,
+            stopEvent: true,
         });
         this.map.addOverlay(this.popup);
+        document.getElementById('OSM-popup-close')!.onclick = () => console.log('aadfasf');
     }
 
     createMarker() {
@@ -118,9 +120,9 @@ export default class OpenStreetMap extends BaseMap {
             airports.forEach((airport) => {
                 const marker = new Feature({
                     geometry: new Point(fromLonLat([airport.longitude_deg, airport.latitude_deg])),
-                    name: `<div id="OSM-popup-data"><h2>${airport.name}</h2><b>${
+                    name: `<h2>${airport.name}</h2><b>${
                         airport.ident
-                    }<br>${airport.type.replace('_', ' ')}<div id="dynamic-airport-data"></div></b></div>`,
+                    }<br>${airport.type.replace('_', ' ')}<div id="dynamic-airport-data"></div></b>`,
                     airport: airport,
                 });
                 const markerStyle = new Style({
@@ -140,21 +142,21 @@ export default class OpenStreetMap extends BaseMap {
         this.airportsLayer.getSource()?.forEachFeature((f) => {
             this.airportsLayer.getSource()?.removeFeature(f);
         });
-        this.popup.getElement()!.style.display = 'none';
+        this.hidePopup();
     }
 
     displayPopup(e: MapBrowserEvent<any>) {
         const feature = this.map.forEachFeatureAtPixel(e.pixel, (f) => f, {
             hitTolerance: this.hitTolerance,
         });
-        if (feature && feature.getGeometry()?.getType() === 'Point') {
+        if (feature && feature.getGeometry()?.getType() === 'Point' && feature.getProperties().name) {
             this.popup.setPosition((feature.getGeometry() as Point).getCoordinates());
-            this.popup.getElement()!.innerHTML = feature.getProperties().name ? feature.getProperties().name : '';
-            this.popup.getElement()!.style.display = feature.getProperties().name ? '' : 'none';
+            this.updatePopupData(feature.getProperties().name);
+            this.popup.getElement()!.style.display = '';
             this.selectedAirport = feature.getProperties().airport;
             this.updateSelectedAirportData();
         } else {
-            this.popup.getElement()!.style.display = 'none';
+            this.hidePopup();
         }
     }
 
@@ -230,7 +232,19 @@ export default class OpenStreetMap extends BaseMap {
 
     updateSelectedAirportDisplayedData(toReplace: string) {
         const currentInfo = this.popup.getElement()!.innerHTML;
+        toReplace = '<div id="dynamic-airport-data">' + toReplace + '</div>';
         const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">[\s\S]*?<\/div>/, toReplace);
         this.popup.getElement()!.innerHTML = newInfo;
+    }
+
+    updatePopupData(toReplace: string) {
+        const currentInfo = this.popup.getElement()!.innerHTML;
+        toReplace = '<div id="OSM-popup-data">' + toReplace + '</div>';
+        const newInfo = currentInfo?.toString().replace(/<div id="OSM-popup-data">[\s\S]*?<\/div>/, toReplace);
+        this.popup.getElement()!.innerHTML = newInfo;
+    }
+
+    hidePopup() {
+        this.popup.getElement()!.style.display = 'none';
     }
 }

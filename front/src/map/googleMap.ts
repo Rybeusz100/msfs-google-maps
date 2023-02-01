@@ -161,6 +161,7 @@ export default class GoogleMap extends BaseMap {
 
     updateSelectedAirportDisplayedData(toReplace: string) {
         const currentInfo = this.infoWindow.getContent();
+        toReplace = '<div id="dynamic-airport-data">' + toReplace + '</div>';
         const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">[\s\S]*?<\/div>/, toReplace);
         this.infoWindow.setContent(newInfo);
     }

@@ -129,8 +129,8 @@ export default abstract class BaseMap {
         });
         const heading = data.heading < 0 ? data.heading + 360 : data.heading;
         const distance = data.distance / 1000;
-        const toReplace = `<div id="dynamic-airport-data">heading: ${Math.round(heading)}°
-        <br>distance: ${distance.toFixed(3)} km</div>`;
+        const toReplace = `heading: ${Math.round(heading)}°
+        <br>distance: ${distance.toFixed(3)} km`;
         this.updateSelectedAirportDisplayedData(toReplace);
     }
 
