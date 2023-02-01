@@ -1,4 +1,4 @@
-use server::{rocket_server, sim_connection};
+use maps_server::{rocket_server, sim_connection};
 
 #[rocket::main]
 async fn main() {
@@ -10,7 +10,7 @@ async fn main() {
 
     env_logger::init();
 
-    server::hello::hello_message();
+    maps_server::hello::hello_message();
 
     let (handle, worker_conn) = sim_connection::start();
 

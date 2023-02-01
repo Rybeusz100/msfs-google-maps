@@ -718,6 +718,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "maps-server"
+version = "0.1.0"
+dependencies = [
+ "colored",
+ "env_logger",
+ "geoutils",
+ "local-ip-address",
+ "log",
+ "rand",
+ "rocket",
+ "serde",
+ "serde_json",
+ "simconnect-sdk",
+ "uuid",
+ "winres",
+]
+
+[[package]]
 name = "matchers"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1218,24 +1236,6 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "server"
-version = "0.1.0"
-dependencies = [
- "colored",
- "env_logger",
- "geoutils",
- "local-ip-address",
- "log",
- "rand",
- "rocket",
- "serde",
- "serde_json",
- "simconnect-sdk",
- "uuid",
- "winres",
 ]
 
 [[package]]
