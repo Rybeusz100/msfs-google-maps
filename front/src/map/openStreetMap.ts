@@ -7,7 +7,7 @@ import { Icon, Stroke, Style } from 'ol/style';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { fromLonLat } from 'ol/proj';
-import { degToRad } from '../lib/utils';
+import { createElementWithId, degToRad } from '../lib/utils';
 import LineString from 'ol/geom/LineString';
 
 export default class OpenStreetMap extends BaseMap {
@@ -73,19 +73,22 @@ export default class OpenStreetMap extends BaseMap {
     }
 
     createPopup() {
-        if (!document.getElementById('OSM-popup')) {
-            const el = document.createElement('div');
-            el.id = 'OSM-popup';
-            el.innerHTML = '<button id="OSM-popup-close">x</button><div id="OSM-popup-data"></div>'
-            document.getElementById('map')!.appendChild(el);
-        }
+        const osmPopup = createElementWithId('div', 'OSM-popup');
+        const osmPopupClose = createElementWithId('button', 'OSM-popup-close');
+        osmPopupClose.innerText = 'x';
+        osmPopupClose.onclick = () => this.hidePopup();
+        const osmPopupData = createElementWithId('div', 'OSM-popup-data');
+        osmPopup.appendChild(osmPopupClose);
+        osmPopup.appendChild(osmPopupData);
+
+        document.getElementById('map')!.appendChild(osmPopup);
+
         this.popup = new Overlay({
             element: document.getElementById('OSM-popup')!,
             positioning: 'bottom-center',
             stopEvent: true,
         });
         this.map.addOverlay(this.popup);
-        document.getElementById('OSM-popup-close')!.onclick = () => console.log('aadfasf');
     }
 
     createMarker() {
@@ -155,8 +158,6 @@ export default class OpenStreetMap extends BaseMap {
             this.popup.getElement()!.style.display = '';
             this.selectedAirport = feature.getProperties().airport;
             this.updateSelectedAirportData();
-        } else {
-            this.hidePopup();
         }
     }
 
@@ -231,17 +232,11 @@ export default class OpenStreetMap extends BaseMap {
     }
 
     updateSelectedAirportDisplayedData(toReplace: string) {
-        const currentInfo = this.popup.getElement()!.innerHTML;
-        toReplace = '<div id="dynamic-airport-data">' + toReplace + '</div>';
-        const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">[\s\S]*?<\/div>/, toReplace);
-        this.popup.getElement()!.innerHTML = newInfo;
+        (document.getElementById('dynamic-airport-data') as HTMLDivElement).innerHTML = toReplace;
     }
 
     updatePopupData(toReplace: string) {
-        const currentInfo = this.popup.getElement()!.innerHTML;
-        toReplace = '<div id="OSM-popup-data">' + toReplace + '</div>';
-        const newInfo = currentInfo?.toString().replace(/<div id="OSM-popup-data">[\s\S]*?<\/div>/, toReplace);
-        this.popup.getElement()!.innerHTML = newInfo;
+        (document.getElementById('OSM-popup-data') as HTMLDivElement).innerHTML = toReplace;
     }
 
     hidePopup() {

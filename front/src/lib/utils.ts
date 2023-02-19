@@ -52,3 +52,9 @@ export function hexToColor(a: number) {
 export function degToRad(deg: number) {
     return deg * (Math.PI / 180.0);
 }
+
+export function createElementWithId(type: string, id: string) {
+    const el = document.createElement(type);
+    el.id = id;
+    return el;
+}
