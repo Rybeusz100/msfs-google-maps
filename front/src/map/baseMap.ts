@@ -5,6 +5,7 @@ import Position from '../lib/position';
 import { headingDistanceTo } from 'geolocation-utils';
 
 export default abstract class BaseMap {
+    mapElement: HTMLDivElement;
     position: Position;
     route: Position[];
     followOn: boolean;
@@ -13,10 +14,11 @@ export default abstract class BaseMap {
     showRouteOn: boolean;
     routeID: string;
     updateIntervalID?: number;
-    colorBreakDiff: number = 300;
+    colorBreakDiff = 300;
     selectedAirport?: IAirport;
 
     constructor(followOn: boolean, showRouteOn: boolean) {
+        this.mapElement = document.getElementById('map') as HTMLDivElement;
         this.position = new Position(0, 0, 0, 0);
         this.route = [];
         this.followOn = followOn;
@@ -28,12 +30,12 @@ export default abstract class BaseMap {
     removeMap() {
         window.clearInterval(this.updateIntervalID);
         window.clearTimeout(this.followResumeTimeoutID);
-        let map = document.getElementById('map');
+        const map = document.getElementById('map');
         if (map) {
-            let parent = map.parentNode;
+            const parent = map.parentNode;
             if (parent) {
                 map.remove();
-                let newMap = document.createElement('div');
+                const newMap = document.createElement('div');
                 newMap.id = 'map';
                 parent.appendChild(newMap);
             }
@@ -53,27 +55,31 @@ export default abstract class BaseMap {
     }
 
     getAirports(lat: number, lon: number, radius: number, callback: (a: IAirport[]) => void) {
-        let req = new XMLHttpRequest();
+        const req = new XMLHttpRequest();
         try {
             req.open('GET', `${API_URL}/airports/${lat}/${lon}/${radius}`);
             req.onload = () => {
-                let airports: IAirport[] = JSON.parse(req.responseText);
+                const airports: IAirport[] = JSON.parse(req.responseText);
                 callback(airports);
             };
             req.send(null);
-        } catch {}
+        } catch {
+            /* empty */
+        }
     }
 
     getRoutePoints(knownCount: number, callback: (route: IResponseRoute) => void) {
-        let req = new XMLHttpRequest();
+        const req = new XMLHttpRequest();
         try {
             req.open('GET', `${API_URL}/position/${knownCount}`);
             req.onload = () => {
-                let response: IResponseRoute = JSON.parse(req.responseText);
+                const response: IResponseRoute = JSON.parse(req.responseText);
                 callback(response);
             };
             req.send(null);
-        } catch {}
+        } catch {
+            /* empty */
+        }
     }
 
     getColor(alt: number): string {
@@ -92,7 +98,7 @@ export default abstract class BaseMap {
             }
         }
 
-        return hexToColor(colorAltMap.at(-1)!.color);
+        return hexToColor(colorAltMap[colorAltMap.length - 1].color);
     }
 
     pauseFollow() {
@@ -110,7 +116,7 @@ export default abstract class BaseMap {
                 this.clearRoute();
             } else {
                 resRoute.points.forEach((point) => {
-                    let pos = new Position(point.lat, point.lon, point.alt, point.hdg);
+                    const pos = new Position(point.lat, point.lon, point.alt, point.hdg);
                     this.route.push(pos);
 
                     this.updateVisualRoute();
@@ -134,6 +140,13 @@ export default abstract class BaseMap {
         this.updateSelectedAirportDisplayedData(toReplace);
     }
 
+    updateSelectedAirportDisplayedData(toReplace: string) {
+        const el = document.getElementById('dynamic-airport-data');
+        if (el) {
+            el.innerHTML = toReplace;
+        }
+    }
+
     abstract markAirports(radius: number): void;
     abstract clearAirports(): void;
 
@@ -141,5 +154,4 @@ export default abstract class BaseMap {
     abstract updateVisualRoute(): void;
     abstract clearRoute(): void;
     abstract toggleRoute(): void;
-    abstract updateSelectedAirportDisplayedData(toReplace: string): void;
 }

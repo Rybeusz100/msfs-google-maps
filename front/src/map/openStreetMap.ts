@@ -18,8 +18,13 @@ export default class OpenStreetMap extends BaseMap {
     routeLayer!: VectorLayer<VectorSource<LineString>>;
     lastSegmentPoints!: number;
     prevFeature!: Feature<LineString>;
+
     popup!: Overlay;
-    hitTolerance: number = 7;
+    popupElement!: HTMLDivElement;
+    popupCloseElement!: HTMLButtonElement;
+    popupDataElement!: HTMLDivElement;
+
+    hitTolerance = 7;
 
     constructor(followOn: boolean, showRouteOn: boolean) {
         super(followOn, showRouteOn);
@@ -73,18 +78,21 @@ export default class OpenStreetMap extends BaseMap {
     }
 
     createPopup() {
-        const osmPopup = createElementWithId('div', 'OSM-popup');
-        const osmPopupClose = createElementWithId('button', 'OSM-popup-close');
-        osmPopupClose.innerText = 'x';
-        osmPopupClose.onclick = () => this.hidePopup();
-        const osmPopupData = createElementWithId('div', 'OSM-popup-data');
-        osmPopup.appendChild(osmPopupClose);
-        osmPopup.appendChild(osmPopupData);
+        this.popupElement = createElementWithId('div', 'OSM-popup');
 
-        document.getElementById('map')!.appendChild(osmPopup);
+        this.popupCloseElement = createElementWithId('button', 'OSM-popup-close');
+        this.popupCloseElement.innerText = 'x';
+        this.popupCloseElement.onclick = () => this.hidePopup();
+
+        this.popupDataElement = createElementWithId('div', 'OSM-popup-data');
+
+        this.popupElement.appendChild(this.popupCloseElement);
+        this.popupElement.appendChild(this.popupDataElement);
+
+        document.getElementById('map')?.appendChild(this.popupElement);
 
         this.popup = new Overlay({
-            element: document.getElementById('OSM-popup')!,
+            element: this.popupElement,
             positioning: 'bottom-center',
             stopEvent: true,
         });
@@ -123,9 +131,10 @@ export default class OpenStreetMap extends BaseMap {
             airports.forEach((airport) => {
                 const marker = new Feature({
                     geometry: new Point(fromLonLat([airport.longitude_deg, airport.latitude_deg])),
-                    name: `<h2>${airport.name}</h2><b>${
-                        airport.ident
-                    }<br>${airport.type.replace('_', ' ')}<div id="dynamic-airport-data"></div></b>`,
+                    name: `<h2>${airport.name}</h2><b>${airport.ident}<br>${airport.type.replace(
+                        '_',
+                        ' ',
+                    )}<div id="dynamic-airport-data"></div></b>`,
                     airport: airport,
                 });
                 const markerStyle = new Style({
@@ -148,36 +157,39 @@ export default class OpenStreetMap extends BaseMap {
         this.hidePopup();
     }
 
-    displayPopup(e: MapBrowserEvent<any>) {
+    displayPopup(e: MapBrowserEvent<UIEvent>) {
         const feature = this.map.forEachFeatureAtPixel(e.pixel, (f) => f, {
             hitTolerance: this.hitTolerance,
         });
         if (feature && feature.getGeometry()?.getType() === 'Point' && feature.getProperties().name) {
             this.popup.setPosition((feature.getGeometry() as Point).getCoordinates());
             this.updatePopupData(feature.getProperties().name);
-            this.popup.getElement()!.style.display = '';
+            this.popupElement.style.display = '';
             this.selectedAirport = feature.getProperties().airport;
             this.updateSelectedAirportData();
         }
     }
 
-    onPointerMove(e: MapBrowserEvent<any>) {
+    onPointerMove(e: MapBrowserEvent<UIEvent>) {
         const feature = this.map.forEachFeatureAtPixel(e.pixel, (f) => f, {
             hitTolerance: this.hitTolerance,
         });
-        document.getElementById('map')!.style.cursor = feature?.getProperties().name ? 'pointer' : '';
+        this.mapElement.style.cursor = feature?.getProperties().name ? 'pointer' : '';
     }
 
     updatePosition() {
-        if (typeof this.route.at(-1) !== 'undefined') {
-            this.position = this.route.at(-1)!;
+        const pos = this.route.at(-1);
+        if (!pos) {
+            return;
+        }
 
-            this.planeMarker.getGeometry()?.setCoordinates(fromLonLat([this.position.lon, this.position.lat]));
-            this.planeStyle.getImage().setRotation(degToRad(this.position.hdg));
+        this.position = pos;
 
-            if (this.followOn && !this.followPaused) {
-                this.map.getView().setCenter(fromLonLat([this.position.lon, this.position.lat]));
-            }
+        this.planeMarker.getGeometry()?.setCoordinates(fromLonLat([this.position.lon, this.position.lat]));
+        this.planeStyle.getImage().setRotation(degToRad(this.position.hdg));
+
+        if (this.followOn && !this.followPaused) {
+            this.map.getView().setCenter(fromLonLat([this.position.lon, this.position.lat]));
         }
     }
 
@@ -189,8 +201,11 @@ export default class OpenStreetMap extends BaseMap {
     }
 
     updateVisualRoute() {
-        let current = this.route.at(-1)!;
-        let routeStyle: any;
+        const current = this.route.at(-1);
+        if (!current) {
+            return;
+        }
+        let routeStyle: Style;
 
         if (this.route.length === 1) {
             this.lastSegmentPoints = 1;
@@ -201,11 +216,14 @@ export default class OpenStreetMap extends BaseMap {
                 }),
             });
         } else {
-            let previous = this.route.at(-2)!;
+            const previous = this.route.at(-2);
+            if (!previous) {
+                return;
+            }
 
             if (Math.floor(previous.alt / this.colorBreakDiff) === Math.floor(current.alt / this.colorBreakDiff)) {
                 this.lastSegmentPoints += 1;
-                routeStyle = this.prevFeature.getStyle();
+                routeStyle = this.prevFeature.getStyle() as Style;
                 this.routeLayer.getSource()?.removeFeature(this.prevFeature);
             } else {
                 this.lastSegmentPoints = 2;
@@ -218,10 +236,10 @@ export default class OpenStreetMap extends BaseMap {
             }
         }
 
-        let path = this.route.slice(-this.lastSegmentPoints).map((el) => [el.lon, el.lat]);
-        let polyline = new LineString(path);
+        const path = this.route.slice(-this.lastSegmentPoints).map((el) => [el.lon, el.lat]);
+        const polyline = new LineString(path);
         polyline.transform('EPSG:4326', 'EPSG:3857');
-        let feature = new Feature(polyline);
+        const feature = new Feature(polyline);
         feature.setStyle(routeStyle);
         this.prevFeature = feature;
         this.routeLayer.getSource()?.addFeature(feature);
@@ -231,15 +249,11 @@ export default class OpenStreetMap extends BaseMap {
         this.routeLayer.setVisible(this.showRouteOn ? true : false);
     }
 
-    updateSelectedAirportDisplayedData(toReplace: string) {
-        (document.getElementById('dynamic-airport-data') as HTMLDivElement).innerHTML = toReplace;
-    }
-
     updatePopupData(toReplace: string) {
-        (document.getElementById('OSM-popup-data') as HTMLDivElement).innerHTML = toReplace;
+        this.popupDataElement.innerHTML = toReplace;
     }
 
     hidePopup() {
-        this.popup.getElement()!.style.display = 'none';
+        this.popupElement.style.display = 'none';
     }
 }

@@ -3,8 +3,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "lint": "prettier --check \"src/**/*.ts\""
+    "lint": "eslint --ext .ts ./src",
+    "prettier": "prettier --write ./src/**/*.ts"
   },
   "dependencies": {
     "geolocation-utils": "^1.2.5",
@@ -13,7 +13,10 @@
   },
   "devDependencies": {
     "@types/google.maps": "^3.49.2",
-    "prettier": "^2.2.1",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "eslint": "^8.34.0",
+    "prettier": "^2.8.4",
     "typescript": "^4.6.4",
     "vite": "^3.1.6"
   }

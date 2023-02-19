@@ -1,5 +1,5 @@
 export default function checkRelease(version: string) {
-    let req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
     req.open('GET', 'https://api.github.com/repos/Rybeusz100/msfs-google-map/releases/latest');
     req.onload = () => {
         if (JSON.parse(req.responseText).tag_name !== version) {

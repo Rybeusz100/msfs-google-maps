@@ -33,7 +33,7 @@ export default class GoogleMap extends BaseMap {
             zoom: 3,
             mapTypeId: 'terrain',
         };
-        this.map = new google.maps.Map(document.getElementById('map')!, mapOptions);
+        this.map = new google.maps.Map(this.mapElement, mapOptions);
     }
 
     createMarker() {
@@ -58,7 +58,7 @@ export default class GoogleMap extends BaseMap {
         this.clearAirports();
         this.getAirports(this.position.lat, this.position.lon, radius, (airports) => {
             airports.forEach((airport) => {
-                let marker = new google.maps.Marker({
+                const marker = new google.maps.Marker({
                     position: new google.maps.LatLng(airport.latitude_deg, airport.longitude_deg),
                     map: this.map,
                     icon: {
@@ -100,11 +100,14 @@ export default class GoogleMap extends BaseMap {
     }
 
     updateVisualRoute() {
-        let current = this.route.at(-1)!;
-        let newLatLng = new google.maps.LatLng(current.lat, current.lon);
+        const current = this.route.at(-1);
+        if (!current) {
+            return;
+        }
+        const newLatLng = new google.maps.LatLng(current.lat, current.lon);
 
         if (this.route.length === 1) {
-            let segment = new google.maps.Polyline({
+            const segment = new google.maps.Polyline({
                 path: [newLatLng],
                 strokeColor: this.getColor(current.alt),
                 strokeOpacity: 1.0,
@@ -117,14 +120,17 @@ export default class GoogleMap extends BaseMap {
             return;
         }
 
-        let previous = this.route.at(-2)!;
-        let lastPath = this.visualRoute.at(-1)!.getPath();
+        const previous = this.route.at(-2);
+        const lastPath = this.visualRoute.at(-1)?.getPath();
+        if (!previous || !lastPath) {
+            return;
+        }
 
         if (Math.floor(previous.alt / this.colorBreakDiff) === Math.floor(current.alt / this.colorBreakDiff)) {
             lastPath.push(newLatLng);
         } else {
-            let coordinates = [new google.maps.LatLng(previous.lat, previous.lon), newLatLng];
-            let segment = new google.maps.Polyline({
+            const coordinates = [new google.maps.LatLng(previous.lat, previous.lon), newLatLng];
+            const segment = new google.maps.Polyline({
                 path: coordinates,
                 strokeColor: this.getColor(current.alt),
                 strokeOpacity: 1.0,
@@ -144,25 +150,21 @@ export default class GoogleMap extends BaseMap {
     }
 
     updatePosition() {
-        if (typeof this.route.at(-1) !== 'undefined') {
-            this.position = this.route.at(-1)!;
-
-            this.svgMarker.rotation = this.position.hdg;
-            this.planeMarker.setIcon(this.svgMarker);
-
-            let newLatLng = new google.maps.LatLng(this.position.lat, this.position.lon);
-            this.planeMarker.setPosition(newLatLng);
-
-            if (this.followOn && !this.followPaused) {
-                this.map.panTo(newLatLng);
-            }
+        const pos = this.route.at(-1);
+        if (!pos) {
+            return;
         }
-    }
 
-    updateSelectedAirportDisplayedData(toReplace: string) {
-        const currentInfo = this.infoWindow.getContent();
-        toReplace = '<div id="dynamic-airport-data">' + toReplace + '</div>';
-        const newInfo = currentInfo?.toString().replace(/<div id="dynamic-airport-data">[\s\S]*?<\/div>/, toReplace);
-        this.infoWindow.setContent(newInfo);
+        this.position = pos;
+
+        this.svgMarker.rotation = this.position.hdg;
+        this.planeMarker.setIcon(this.svgMarker);
+
+        const newLatLng = new google.maps.LatLng(this.position.lat, this.position.lon);
+        this.planeMarker.setPosition(newLatLng);
+
+        if (this.followOn && !this.followPaused) {
+            this.map.panTo(newLatLng);
+        }
     }
 }

@@ -1,7 +1,7 @@
 import { API_URL } from './constants';
 
 export function getApiKey() {
-    let req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
     try {
         req.open('GET', API_URL + '/api_key', false);
         req.send(null);
@@ -16,19 +16,23 @@ export function getApiKey() {
 }
 
 export function shutdown() {
-    let req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
     try {
         req.open('GET', API_URL + '/shutdown', false);
         req.send(null);
-    } catch {}
+    } catch {
+        /* empty */
+    }
 }
 
 export function resetRoute() {
-    let req = new XMLHttpRequest();
+    const req = new XMLHttpRequest();
     try {
         req.open('GET', `${API_URL}/reset`);
         req.send(null);
-    } catch {}
+    } catch {
+        /* empty */
+    }
 }
 
 export function lerpColor(a: number, b: number, amount: number) {
@@ -53,7 +57,7 @@ export function degToRad(deg: number) {
     return deg * (Math.PI / 180.0);
 }
 
-export function createElementWithId(type: string, id: string) {
+export function createElementWithId<T extends keyof HTMLElementTagNameMap>(type: T, id: string) {
     const el = document.createElement(type);
     el.id = id;
     return el;
