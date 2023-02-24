@@ -1,3 +1,4 @@
+use log::{info, trace, warn};
 use simconnect_sdk::{Notification, SimConnect};
 use std::{
     sync::{mpsc, Arc, Mutex},
@@ -61,16 +62,9 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
             }
 
             '_main: loop {
-                match rx.try_recv() {
-                    Ok(Message::Stop) => {
-                        info!("Message::Stop received, stopping simconnect");
-                        break 'thread;
-                    }
-                    Ok(Message::Restart) => {
-                        info!("Message::Restart received, restarting simconnect");
-                        continue 'thread;
-                    }
-                    _ => (),
+                if let Ok(Message::Stop) = rx.try_recv() {
+                    info!("Message::Stop received, stopping simconnect");
+                    break 'thread;
                 }
 
                 match client.get_next_dispatch() {

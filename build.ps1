@@ -9,7 +9,6 @@ cargo build --release
 cd ..
 
 cp server/target/release/maps-server.exe dist/
-cp server/Rocket.toml dist/
 cp server/SimConnect.dll dist/
 cp -r server/assets dist/assets
 

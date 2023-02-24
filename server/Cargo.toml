@@ -8,16 +8,19 @@ fake_route = []
 
 [dependencies]
 simconnect-sdk = { version = "0.2", features = ["derive"] }
-rocket = "0.5.0-rc.2"
-serde = "1.0.143"
+serde = { version = "1.0.151", features = ["derive"] }
 serde_json = "1.0.83"
 uuid = { version = "1.1.2", features = ["v4", "fast-rng", "macro-diagnostics"] }
 geoutils = "0.5.1"
 log = "0.4.17"
-env_logger = "0.9.0"
 local-ip-address = "0.4.6"
 colored = "2.0.0"
 rand = "0.8.5"
+pretty_env_logger = "0.4.0"
+actix-web = "4.3.0"
+actix-files = "0.6.2"
+actix-cors = "0.6.4"
+parking_lot = "0.12.1"
 
 [target.'cfg(windows)'.build-dependencies]
 winres = "0.1"

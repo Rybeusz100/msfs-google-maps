@@ -75,3 +75,12 @@ impl Position {
         true
     }
 }
+
+impl Clone for SimWorkerConn {
+    fn clone(&self) -> Self {
+        Self {
+            tx: self.tx.lock().unwrap().clone().into(),
+            route: self.route.clone(),
+        }
+    }
+}
