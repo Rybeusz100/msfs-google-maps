@@ -20,6 +20,11 @@ async fn main() {
     #[cfg(not(debug_assertions))]
     std::env::set_var("RUST_LOG", "warn");
 
+    #[cfg(debug_assertions)]
+    const FILES_DIR: &str = "../front/dist/";
+    #[cfg(not(debug_assertions))]
+    const FILES_DIR: &str = "./front/";
+
     pretty_env_logger::init();
 
     hello::hello_message();
@@ -52,6 +57,7 @@ async fn main() {
                 .service(api_key)
                 .service(get_airports)
                 .service(shutdown)
+                .service(actix_files::Files::new("/", FILES_DIR).index_file("index.html"))
         }
     })
     .bind(("0.0.0.0", 8054))
