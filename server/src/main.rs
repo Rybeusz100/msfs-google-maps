@@ -40,8 +40,9 @@ async fn main() {
         }
     };
 
-    let airports = web::Data::new(airports);
     let stop_handle = web::Data::new(StopHandle::default());
+    let worker_conn = web::Data::new(worker_conn);
+    let airports = web::Data::new(airports);
 
     let server = HttpServer::new({
         let stop_handle = stop_handle.clone();
@@ -49,7 +50,7 @@ async fn main() {
             App::new()
                 .wrap(Cors::permissive())
                 .app_data(stop_handle.clone())
-                .app_data(web::Data::new(worker_conn.clone()))
+                .app_data(worker_conn.clone())
                 .app_data(airports.clone())
                 .service(position)
                 .service(position_known)
@@ -65,7 +66,6 @@ async fn main() {
     .run();
 
     stop_handle.register(server.handle());
-
     server.await.unwrap();
 
     tx.send(Message::Stop).unwrap();
