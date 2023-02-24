@@ -41,8 +41,6 @@ export default class OpenStreetMap extends BaseMap {
 
         this.map.on('click', (e) => this.displayPopup(e));
         this.map.on('pointermove', (e) => this.onPointerMove(e));
-
-        this.updateIntervalID = window.setInterval(() => this.updateRoute(), 1000);
     }
 
     createAirportsLayer() {

@@ -13,6 +13,7 @@ cp server/SimConnect.dll dist/
 cp -r server/assets dist/assets
 
 cd front
+npm i
 npm run build
 cd ..
 

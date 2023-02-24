@@ -2,17 +2,19 @@ import './index.css';
 import NoSleep from 'nosleep.js';
 import GoogleMap from './map/googleMap';
 import loadGoogleMaps from './map/googleMapsLoader';
-import { getApiKey, resetRoute, shutdown } from './lib/utils';
+import { getApiKey, management } from './lib/utils';
 import checkRelease from './lib/checkRelease';
 import { VERSION } from './lib/constants';
 import type BaseMap from './map/baseMap';
-import { Mode } from './lib/enums';
+import { ManagementCommand, Mode } from './lib/enums';
 import 'ol/ol.css';
 import OpenStreetMap from './map/openStreetMap';
 import toggleTopnav from './lib/topnav';
 import { getMode } from './lib/storage';
 
 checkRelease(VERSION);
+
+const apiKey = getApiKey();
 
 const followCheckbox = document.getElementById('follow') as HTMLInputElement;
 const noSleepCheckbox = document.getElementById('noSleep') as HTMLInputElement;
@@ -39,11 +41,11 @@ noSleepCheckbox.addEventListener('change', () => {
 });
 
 shutdownBtn.addEventListener('click', () => {
-    window.confirm('Are you sure you want to shutdown the server?') && shutdown();
+    window.confirm('Are you sure you want to shutdown the server?') && management(ManagementCommand.Shutdown);
 });
 
 clearRouteBtn.addEventListener('click', () => {
-    window.confirm('Are you sure you want to clear the route?') && resetRoute();
+    window.confirm('Are you sure you want to clear the route?') && management(ManagementCommand.ResetRoute);
 });
 
 changeModeBtn.addEventListener('click', () => {
@@ -73,13 +75,12 @@ showAirportsBtn.addEventListener('click', () => {
 
 startApp(mode);
 
-function startApp(mode: Mode) {
+async function startApp(mode: Mode) {
     if (mode === Mode.GoogleMaps) {
         if (!googleMapsLoaded) {
             googleMapsLoaded = true;
-            const apiKey = getApiKey();
 
-            loadGoogleMaps(apiKey, () => {
+            loadGoogleMaps(await apiKey, () => {
                 map = new GoogleMap(followCheckbox.checked, showRouteCheckbox.checked);
             });
         } else {

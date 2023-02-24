@@ -20,8 +20,6 @@ export default class GoogleMap extends BaseMap {
         this.map.addListener('drag', () => {
             this.pauseFollow();
         });
-
-        this.updateIntervalID = window.setInterval(() => this.updateRoute(), 1000);
     }
 
     createMap() {

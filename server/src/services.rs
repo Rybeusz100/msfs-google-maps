@@ -60,12 +60,10 @@ async fn position_known(path: web::Path<usize>, conn: web::Data<SimWorkerConn>) 
 
 #[get("/api_key")]
 async fn api_key() -> impl Responder {
-    let key = match fs::read_to_string("./api_key.txt") {
-        Ok(contents) => contents.trim().to_owned(),
-        Err(_) => "".to_owned(),
-    };
-
-    key
+    match fs::read_to_string("./api_key.txt") {
+        Ok(contents) => HttpResponse::Ok().body(contents.trim().to_owned()),
+        Err(_) => HttpResponse::NotFound().finish(),
+    }
 }
 
 #[get("/airports/{latitude}/{longitude}/{radius_km}")]

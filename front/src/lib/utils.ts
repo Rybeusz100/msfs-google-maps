@@ -1,44 +1,32 @@
 import { API_URL } from './constants';
+import { ManagementCommand } from './enums';
 
-export function getApiKey() {
-    const req = new XMLHttpRequest();
+export async function getApiKey() {
     try {
-        req.open('GET', API_URL + '/api_key', false);
-        req.send(null);
-        if (req.status === 200) {
-            return req.responseText;
+        const response = await fetch(API_URL + '/api_key');
+        if (response.ok) {
+            return response.text();
         } else {
-            return '';
+            console.error('Error retrieving API key:', response.statusText);
         }
-    } catch {
-        return '';
+    } catch (error) {
+        console.error('Error retrieving API key:', error);
     }
+    return null;
 }
 
-export function shutdown() {
-    const req = new XMLHttpRequest();
-    try {
-        req.open('POST', API_URL + '/management', false);
-        req.setRequestHeader('Content-Type', 'application/json');
-        req.send(JSON.stringify({
-            command: "Shutdown"
-        }));
-    } catch {
-        /* empty */
-    }
-}
+export function management(command: ManagementCommand) {
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            command: command,
+        }),
+    };
 
-export function resetRoute() {
-    const req = new XMLHttpRequest();
-    try {
-        req.open('POST', `${API_URL}/management`);
-        req.setRequestHeader('Content-Type', 'application/json');
-        req.send(JSON.stringify({
-            command: "ResetRoute"
-        }));
-    } catch {
-        /* empty */
-    }
+    fetch(API_URL + '/management', options);
 }
 
 export function lerpColor(a: number, b: number, amount: number) {

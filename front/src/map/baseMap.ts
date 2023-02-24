@@ -13,7 +13,7 @@ export default abstract class BaseMap {
     followResumeTimeoutID?: number;
     showRouteOn: boolean;
     routeID: string;
-    updateIntervalID?: number;
+    updateTimeoutID?: number;
     colorBreakDiff = 300;
     selectedAirport?: IAirport;
 
@@ -25,10 +25,12 @@ export default abstract class BaseMap {
         this.followPaused = false;
         this.showRouteOn = showRouteOn;
         this.routeID = '';
+
+        this.updateRoute();
     }
 
     removeMap() {
-        window.clearInterval(this.updateIntervalID);
+        window.clearTimeout(this.updateTimeoutID);
         window.clearTimeout(this.followResumeTimeoutID);
         const map = document.getElementById('map');
         if (map) {
@@ -55,31 +57,16 @@ export default abstract class BaseMap {
     }
 
     getAirports(lat: number, lon: number, radius: number, callback: (a: IAirport[]) => void) {
-        const req = new XMLHttpRequest();
-        try {
-            req.open('GET', `${API_URL}/airports/${lat}/${lon}/${radius}`);
-            req.onload = () => {
-                const airports: IAirport[] = JSON.parse(req.responseText);
-                callback(airports);
-            };
-            req.send(null);
-        } catch {
-            /* empty */
-        }
-    }
-
-    getRoutePoints(knownCount: number, callback: (route: IResponseRoute) => void) {
-        const req = new XMLHttpRequest();
-        try {
-            req.open('GET', `${API_URL}/position/${knownCount}`);
-            req.onload = () => {
-                const response: IResponseRoute = JSON.parse(req.responseText);
-                callback(response);
-            };
-            req.send(null);
-        } catch {
-            /* empty */
-        }
+        fetch(API_URL + `/airports/${lat}/${lon}/${radius}`)
+            .then(async (response) => {
+                if (response.ok) {
+                    const airports: IAirport[] = await response.json();
+                    callback(airports);
+                }
+            })
+            .catch(() => {
+                /* empty */
+            });
     }
 
     getColor(alt: number): string {
@@ -110,21 +97,30 @@ export default abstract class BaseMap {
     }
 
     updateRoute() {
-        this.getRoutePoints(this.route.length, (resRoute) => {
-            if (this.routeID !== resRoute.id) {
-                this.routeID = resRoute.id;
-                this.clearRoute();
-            } else {
-                resRoute.points.forEach((point) => {
-                    const pos = new Position(point.lat, point.lon, point.alt, point.hdg);
-                    this.route.push(pos);
+        fetch(API_URL + `/position/${this.route.length}`)
+            .then(async (response) => {
+                if (response.ok) {
+                    const route: IResponseRoute = await response.json();
+                    if (this.routeID !== route.id) {
+                        this.routeID = route.id;
+                        this.clearRoute();
+                    }
+                    route.points.forEach((point) => {
+                        const pos = new Position(point.lat, point.lon, point.alt, point.hdg);
+                        this.route.push(pos);
 
-                    this.updateVisualRoute();
-                });
-                this.updatePosition();
-                this.updateSelectedAirportData();
-            }
-        });
+                        this.updateVisualRoute();
+                    });
+                    this.updatePosition();
+                    this.updateSelectedAirportData();
+                }
+            })
+            .catch(() => {
+                /* empty */
+            })
+            .finally(() => {
+                this.updateTimeoutID = setTimeout(() => this.updateRoute(), 500);
+            });
     }
 
     updateSelectedAirportData() {
