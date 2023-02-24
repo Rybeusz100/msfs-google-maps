@@ -8,6 +8,7 @@ use stop_handle::StopHandle;
 
 mod airports;
 mod hello;
+mod models;
 mod services;
 mod sim_connection;
 mod stop_handle;
@@ -54,10 +55,9 @@ async fn main() {
                 .app_data(airports.clone())
                 .service(position)
                 .service(position_known)
-                .service(reset_route)
                 .service(api_key)
                 .service(get_airports)
-                .service(shutdown)
+                .service(management)
                 .service(actix_files::Files::new("/", FILES_DIR).index_file("index.html"))
         }
     })

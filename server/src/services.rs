@@ -1,12 +1,30 @@
-use crate::{airports::Airports, sim_connection::SimWorkerConn, stop_handle::StopHandle};
-use actix_web::{get, web, Responder};
+use crate::{
+    airports::Airports,
+    models::{ManagementCommand, ManagementRequest},
+    sim_connection::SimWorkerConn,
+    stop_handle::StopHandle,
+};
+use actix_web::{get, post, web, HttpResponse, Responder};
 use serde_json::json;
 use std::fs;
 
-#[get("/shutdown")]
-async fn shutdown(stop_handle: web::Data<StopHandle>) -> impl Responder {
-    stop_handle.stop(false);
-    "Shutting down..."
+#[post("/management")]
+async fn management(
+    stop_handle: web::Data<StopHandle>,
+    conn: web::Data<SimWorkerConn>,
+    input: web::Json<ManagementRequest>,
+) -> impl Responder {
+    match input.command {
+        ManagementCommand::Shutdown => {
+            stop_handle.stop(false);
+            HttpResponse::Ok().finish()
+        }
+        ManagementCommand::ResetRoute => {
+            let mut route = conn.route.lock().unwrap();
+            route.reset();
+            HttpResponse::Ok().body(json!({"id": route.id()}).to_string())
+        }
+    }
 }
 
 #[get("/position")]
@@ -38,13 +56,6 @@ async fn position_known(path: web::Path<usize>, conn: web::Data<SimWorkerConn>) 
         })
         .to_string()
     }
-}
-
-#[get("/reset")]
-async fn reset_route(conn: web::Data<SimWorkerConn>) -> impl Responder {
-    let mut route = conn.route.lock().unwrap();
-    route.reset();
-    json!({"id": route.id()}).to_string()
 }
 
 #[get("/api_key")]

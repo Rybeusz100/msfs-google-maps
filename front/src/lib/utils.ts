@@ -18,8 +18,11 @@ export function getApiKey() {
 export function shutdown() {
     const req = new XMLHttpRequest();
     try {
-        req.open('GET', API_URL + '/shutdown', false);
-        req.send(null);
+        req.open('POST', API_URL + '/management', false);
+        req.setRequestHeader('Content-Type', 'application/json');
+        req.send(JSON.stringify({
+            command: "Shutdown"
+        }));
     } catch {
         /* empty */
     }
@@ -28,8 +31,11 @@ export function shutdown() {
 export function resetRoute() {
     const req = new XMLHttpRequest();
     try {
-        req.open('GET', `${API_URL}/reset`);
-        req.send(null);
+        req.open('POST', `${API_URL}/management`);
+        req.setRequestHeader('Content-Type', 'application/json');
+        req.send(JSON.stringify({
+            command: "ResetRoute"
+        }));
     } catch {
         /* empty */
     }
