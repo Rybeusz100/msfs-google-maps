@@ -75,3 +75,9 @@ async fn get_airports(
     let found = airports.find_closest(latitude, longitude, radius_km);
     serde_json::to_string(&found).unwrap()
 }
+
+#[get("/status")]
+async fn status(conn: web::Data<SimWorkerConn>) -> impl Responder {
+    let sim_connected = conn.connected.lock().unwrap().to_string();
+    json!({ "SimConnected": sim_connected }).to_string()
+}

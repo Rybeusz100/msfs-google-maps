@@ -26,6 +26,7 @@ pub struct Route {
 pub struct SimWorkerConn {
     pub tx: Mutex<mpsc::Sender<Message>>,
     pub route: Arc<Mutex<Route>>,
+    pub connected: Arc<Mutex<bool>>,
 }
 
 impl Route {

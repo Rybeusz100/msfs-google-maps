@@ -19,10 +19,12 @@ pub use structs::*;
 pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
     let (tx, rx) = mpsc::channel::<Message>();
     let route = Arc::new(Mutex::new(Route::new()));
+    let connected = Arc::new(Mutex::new(false));
 
     let handle;
     {
         let route = route.clone();
+        let connected = connected.clone();
         #[cfg(feature = "fake_route")]
         let mut fake_route = FakeRoute::new(Position {
             lat: 50.076707070424845,
@@ -43,11 +45,13 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
             }
 
             let mut client;
+            *connected.lock().unwrap() = false;
             loop {
                 match SimConnect::new("msfs-google-maps") {
                     Ok(c) => {
                         info!("Successfully created a SimConnect SDK client");
                         client = c;
+                        *connected.lock().unwrap() = true;
                         break;
                     }
                     Err(_) => {
@@ -107,6 +111,7 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
         SimWorkerConn {
             tx: Mutex::new(tx),
             route,
+            connected,
         },
     )
 }

@@ -58,6 +58,7 @@ async fn main() {
                 .service(api_key)
                 .service(get_airports)
                 .service(management)
+                .service(status)
                 .service(actix_files::Files::new("/", FILES_DIR).index_file("index.html"))
         }
     })
