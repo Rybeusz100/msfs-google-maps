@@ -66,9 +66,8 @@ showAirportsBtn.addEventListener('click', () => {
 async function startApp(mode: Mode) {
     if (mode === Mode.GoogleMaps) {
         if (!googleMapsLoaded) {
-            googleMapsLoaded = true;
-
             loadGoogleMaps(() => {
+                googleMapsLoaded = true;
                 map = new GoogleMap(followCheckbox.checked, showRouteCheckbox.checked);
             });
         } else {
@@ -84,7 +83,7 @@ async function startApp(mode: Mode) {
 function changeMode() {
     showAirportsBtn.setAttribute('shown', 'false');
     showAirportsBtn.innerText = 'Show airports';
-    map.removeMap();
+    map?.removeMap();
     mode = mode === Mode.GoogleMaps ? Mode.OpenStreetMap : Mode.GoogleMaps;
     localStorage.setItem('mode', mode.toString());
     startApp(mode);
