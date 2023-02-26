@@ -2,7 +2,7 @@ import './index.css';
 import NoSleep from 'nosleep.js';
 import GoogleMap from './map/googleMap';
 import loadGoogleMaps from './map/googleMapsLoader';
-import { getApiKey, management } from './lib/utils';
+import { management } from './lib/utils';
 import checkRelease from './lib/checkRelease';
 import { VERSION } from './lib/constants';
 import type BaseMap from './map/baseMap';
@@ -11,10 +11,6 @@ import 'ol/ol.css';
 import OpenStreetMap from './map/openStreetMap';
 import toggleTopnav from './lib/topnav';
 import { getMode } from './lib/storage';
-
-checkRelease(VERSION);
-
-const apiKey = getApiKey();
 
 const followCheckbox = document.getElementById('follow') as HTMLInputElement;
 const noSleepCheckbox = document.getElementById('noSleep') as HTMLInputElement;
@@ -26,15 +22,9 @@ const shutdownBtn = document.getElementById('shutdown') as HTMLButtonElement;
 const changeModeBtn = document.getElementById('changeMode') as HTMLButtonElement;
 const settingsGearBtn = document.getElementById('settings-gear') as HTMLElement;
 
-settingsGearBtn.addEventListener('click', toggleTopnav);
-
 showAirportsBtn.setAttribute('shown', 'false');
 
-const noSleep = new NoSleep();
-
-let map: BaseMap;
-let mode = getMode();
-let googleMapsLoaded = false;
+settingsGearBtn.addEventListener('click', toggleTopnav);
 
 noSleepCheckbox.addEventListener('change', () => {
     noSleepCheckbox.checked ? noSleep.enable() : noSleep.disable();
@@ -73,14 +63,12 @@ showAirportsBtn.addEventListener('click', () => {
     }
 });
 
-startApp(mode);
-
 async function startApp(mode: Mode) {
     if (mode === Mode.GoogleMaps) {
         if (!googleMapsLoaded) {
             googleMapsLoaded = true;
 
-            loadGoogleMaps(await apiKey, () => {
+            loadGoogleMaps(() => {
                 map = new GoogleMap(followCheckbox.checked, showRouteCheckbox.checked);
             });
         } else {
@@ -101,3 +89,12 @@ function changeMode() {
     localStorage.setItem('mode', mode.toString());
     startApp(mode);
 }
+
+checkRelease(VERSION);
+const noSleep = new NoSleep();
+
+let map: BaseMap;
+let mode = getMode();
+let googleMapsLoaded = false;
+
+startApp(mode);

@@ -7,7 +7,7 @@ export async function getApiKey() {
         if (response.ok) {
             return response.text();
         } else {
-            console.error('Error retrieving API key:', response.statusText);
+            throw new Error(response.statusText);
         }
     } catch (error) {
         console.error('Error retrieving API key:', error);
