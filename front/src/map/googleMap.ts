@@ -28,7 +28,7 @@ export default class GoogleMap extends BaseMap {
                 lat: 0,
                 lng: 0,
             },
-            zoom: 3,
+            zoom: this.initialZoom,
             mapTypeId: 'terrain',
         };
         this.map = new google.maps.Map(this.mapElement, mapOptions);
