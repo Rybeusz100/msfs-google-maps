@@ -5,7 +5,7 @@ import Position from '../lib/position';
 import { headingDistanceTo } from 'geolocation-utils';
 
 export default abstract class BaseMap {
-    readonly initialZoom = 12;
+    readonly initialZoom = 10;
     mapElement: HTMLDivElement;
     position: Position;
     route: Position[];

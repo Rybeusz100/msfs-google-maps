@@ -48,6 +48,7 @@ export default class OpenStreetMap extends BaseMap {
             source: new VectorSource(),
         });
         this.map.addLayer(this.airportsLayer);
+        this.toggleRoute();
     }
 
     createRouteLayer() {
@@ -244,7 +245,7 @@ export default class OpenStreetMap extends BaseMap {
     }
 
     toggleRoute() {
-        this.routeLayer.setVisible(this.showRouteOn ? true : false);
+        this.routeLayer.setVisible(this.showRouteOn);
     }
 
     updatePopupData(toReplace: string) {
