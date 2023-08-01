@@ -2,15 +2,16 @@ import './index.css';
 import NoSleep from 'nosleep.js';
 import GoogleMap from './map/googleMap';
 import loadGoogleMaps from './map/googleMapsLoader';
-import { management } from './lib/utils';
+import { management, getMaptilerConfig } from './lib/utils';
 import checkRelease from './lib/checkRelease';
 import { VERSION } from './lib/constants';
 import type BaseMap from './map/baseMap';
-import { ManagementCommand, Mode } from './lib/enums';
+import { ManagementCommand, Mode, numberOfModes } from './lib/enums';
 import 'ol/ol.css';
 import OpenStreetMap from './map/openStreetMap';
 import toggleTopnav from './lib/topnav';
 import { getMode } from './lib/storage';
+import Maptiler from './map/maptiler';
 
 const followCheckbox = document.getElementById('follow') as HTMLInputElement;
 const noSleepCheckbox = document.getElementById('noSleep') as HTMLInputElement;
@@ -78,13 +79,19 @@ async function startApp(mode: Mode) {
     if (mode === Mode.OpenStreetMap) {
         map = new OpenStreetMap(followCheckbox.checked, showRouteCheckbox.checked);
     }
+
+    if (mode === Mode.Maptiler) {
+        getMaptilerConfig().then((config) => {
+            map = new Maptiler(followCheckbox.checked, showRouteCheckbox.checked, config);
+        });
+    }
 }
 
 function changeMode() {
     showAirportsBtn.setAttribute('shown', 'false');
     showAirportsBtn.innerText = 'Show airports';
     map?.removeMap();
-    mode = mode === Mode.GoogleMaps ? Mode.OpenStreetMap : Mode.GoogleMaps;
+    mode = (mode + 1) % numberOfModes;
     localStorage.setItem('mode', mode.toString());
     startApp(mode);
 }

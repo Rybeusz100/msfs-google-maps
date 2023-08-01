@@ -1,5 +1,6 @@
 server/api_key.txt
 server/target
+server/front
 dist
 front/node_modules
 

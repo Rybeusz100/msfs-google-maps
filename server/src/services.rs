@@ -66,6 +66,14 @@ async fn api_key() -> impl Responder {
     }
 }
 
+#[get("/maptiler_config")]
+async fn maptiler_config() -> impl Responder {
+    match fs::read_to_string("./maptiler_config.json") {
+        Ok(contents) => HttpResponse::Ok().content_type("application/json").body(contents.trim().to_owned()),
+        Err(_) => HttpResponse::NotFound().finish(),
+    }
+}
+
 #[get("/airports/{latitude}/{longitude}/{radius_km}")]
 async fn get_airports(
     path: web::Path<(f64, f64, f64)>,

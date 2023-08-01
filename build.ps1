@@ -10,6 +10,7 @@ cd ..
 
 cp server/target/release/maps-server.exe dist/
 cp server/SimConnect.dll dist/
+cp server/maptiler_config.json dist/
 cp -r server/assets dist/assets
 
 cd front
