@@ -101,7 +101,7 @@ pub fn start() -> (JoinHandle<()>, SimWorkerConn) {
                         continue 'thread;
                     }
                 }
-                thread::sleep(Duration::from_millis(200));
+                thread::sleep(Duration::from_millis(100));
             }
         })
     }

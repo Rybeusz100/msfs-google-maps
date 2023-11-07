@@ -11,6 +11,7 @@ import 'ol/ol.css';
 import OpenStreetMap from './map/openStreetMap';
 import toggleTopnav from './lib/topnav';
 import { getMode } from './lib/storage';
+import { checkConnection } from './lib/connectionStatus';
 
 const followCheckbox = document.getElementById('follow') as HTMLInputElement;
 const noSleepCheckbox = document.getElementById('noSleep') as HTMLInputElement;
@@ -90,6 +91,7 @@ function changeMode() {
 }
 
 checkRelease(VERSION);
+checkConnection();
 const noSleep = new NoSleep();
 
 let map: BaseMap;

@@ -2,7 +2,8 @@
     --primaryColor: #333;
     --secondaryColor: #f2f2f2;
     --thirdColor: #444;
-    --warningColor: #da0000;
+    --warningColor: #f7b800;
+    --errorColor: #da0000;
     --borderRadius: 4px;
 }
 
@@ -81,7 +82,7 @@ body {
 
 #shutdown {
     color: var(--secondaryColor);
-    background-color: var(--warningColor);
+    background-color: var(--errorColor);
     font-size: 22px;
     width: 40px;
     height: 40px;
@@ -91,6 +92,18 @@ body {
     font-size: 22px;
     width: 40px;
     height: 40px;
+}
+
+#status-icon.hidden {
+    display: none;
+}
+
+#status-icon.warning {
+    color: var(--warningColor);
+}
+
+#status-icon.error {
+    color: var(--errorColor);
 }
 
 #OSM-popup {
