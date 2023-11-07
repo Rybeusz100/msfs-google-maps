@@ -94,6 +94,10 @@ body {
     height: 40px;
 }
 
+#status-icon {
+    cursor: pointer;
+}
+
 #status-icon.hidden {
     display: none;
 }
