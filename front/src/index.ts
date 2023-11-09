@@ -67,16 +67,11 @@ showAirportsBtn.addEventListener('click', () => {
 async function startApp(mode: Mode) {
     if (mode === Mode.GoogleMaps) {
         if (!googleMapsLoaded) {
-            loadGoogleMaps(() => {
-                googleMapsLoaded = true;
-                map = new GoogleMap(followCheckbox.checked, showRouteCheckbox.checked);
-            });
-        } else {
-            map = new GoogleMap(followCheckbox.checked, showRouteCheckbox.checked);
+            await loadGoogleMaps();
+            googleMapsLoaded = true;
         }
-    }
-
-    if (mode === Mode.OpenStreetMap) {
+        map = new GoogleMap(followCheckbox.checked, showRouteCheckbox.checked);
+    } else if (mode === Mode.OpenStreetMap) {
         map = new OpenStreetMap(followCheckbox.checked, showRouteCheckbox.checked);
     }
 }

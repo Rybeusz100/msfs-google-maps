@@ -1,9 +1,21 @@
 import { getApiKey } from '../lib/utils';
 
-export default async function loadGoogleMaps(callback: () => void) {
+const GoogleMapsLoadedEvent = new Event('GoogleMapsLoaded');
+
+window.GoogleMapsLoadedCallback = () => {
+    window.dispatchEvent(GoogleMapsLoadedEvent);
+};
+
+export default async function loadGoogleMaps() {
     const apiKey = (await getApiKey()) || '';
     const gMaps = document.createElement('script');
-    gMaps.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=weekly`;
-    gMaps.onload = callback;
+    gMaps.async = true;
+    gMaps.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&v=weekly&callback=GoogleMapsLoadedCallback`;
     document.head.appendChild(gMaps);
+
+    return new Promise<void>((resolve) => {
+        window.addEventListener(GoogleMapsLoadedEvent.type, () => {
+            resolve();
+        });
+    });
 }
