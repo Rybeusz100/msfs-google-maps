@@ -2,21 +2,25 @@ import { API_URL } from './constants';
 
 interface StatusInfo {
     className: string;
-    hint: string;
+    title: string;
+    message: string;
 }
 
 const Status = {
     SimConnected: {
         className: 'hidden',
-        hint: '',
+        title: '',
+        message: '',
     },
     SimNotConnected: {
         className: 'warning fa-triangle-exclamation',
-        hint: "Server is running, but it can't connect to simulator. Check if simulator is running.",
+        title: 'Warning',
+        message: "Server is running, but it can't connect to simulator. Check if simulator is running.",
     },
     Error: {
         className: 'error fa-circle-exclamation',
-        hint: "Couldn't connect to server. Check if server is running.",
+        title: 'Error',
+        message: "Couldn't connect to server. Check if server is running.",
     },
 };
 
@@ -44,5 +48,6 @@ export async function checkConnection() {
 function updateConnectionIcon(status: StatusInfo) {
     const statusIcon = document.getElementById('status-icon') as HTMLElement;
     statusIcon.className = 'fa ' + status.className;
-    statusIcon.onclick = () => window.alert(status.hint);
+    statusIcon.title = status.title + '. Click for details.';
+    statusIcon.onclick = () => window.alert(status.message);
 }
