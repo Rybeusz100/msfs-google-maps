@@ -1,5 +1,5 @@
 # Google Maps and OpenStreetMap for Microsoft Flight Simulator 2020
-![version](https://img.shields.io/badge/version-2.0.0-blue)
+![version](https://img.shields.io/badge/version-2.1.0-blue)
 
 ## Table of contents
 * [General info](#general-info)
@@ -30,7 +30,7 @@ Features:
 1. Follow the installation guide again
 
 ## Troubleshooting
-If your Google Maps view is grayed out and `For development purposes only` message is displayed, you'll need to provide a Google Maps API key, you can get a free trial [here](https://developers.google.com/maps) (the key has to have access to the Maps JavaScript API). After you've obtained your key, you can simply copy and paste it into `api_key.txt` file located inside your extracted folder. After your free trial has expired, you can still use the Google Maps API for free, as long as you don't exceed 200$ a month (which should be more than enough for personal use) or you can always use OpenStreetMap for free without providing any additional stuff.
+If your Google Maps view is grayed out and `For development purposes only` or any error message is displayed, you'll need to provide a Google Maps API key, you can get a free trial [here](https://developers.google.com/maps) (the key has to have access to the Maps JavaScript API). After you've obtained your key, you can simply copy and paste it into `api_key.txt` file located inside your extracted folder. After your free trial has expired, you can still use the Google Maps API for free, as long as you don't exceed 200$ a month (which should be more than enough for personal use) or you can always use OpenStreetMap for free without providing any additional stuff.
 
 ## Development setup
 ### Requirements
