@@ -2,6 +2,7 @@ import type { IColorAlt } from './interfaces';
 
 export const API_URL = import.meta.env.MODE === 'development' ? 'http://localhost:8054' : '.';
 export const VERSION = 'v2.1.0';
+export const LOCAL_STORAGE_MODE_KEY = 'MapMode';
 
 export const colorAltMap: IColorAlt[] = [
     { color: 0xffffff, alt: 328 }, // 100 meters

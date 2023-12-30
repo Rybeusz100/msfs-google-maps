@@ -4,7 +4,7 @@ import GoogleMap from './map/googleMap';
 import loadGoogleMaps from './map/googleMapsLoader';
 import { management } from './lib/utils';
 import checkRelease from './lib/checkRelease';
-import { VERSION } from './lib/constants';
+import { LOCAL_STORAGE_MODE_KEY, VERSION } from './lib/constants';
 import type BaseMap from './map/baseMap';
 import { ManagementCommand, Mode } from './lib/enums';
 import 'ol/ol.css';
@@ -81,7 +81,7 @@ function changeMode() {
     showAirportsBtn.innerText = 'Show airports';
     map?.removeMap();
     mode = mode === Mode.GoogleMaps ? Mode.OpenStreetMap : Mode.GoogleMaps;
-    localStorage.setItem('mode', mode.toString());
+    localStorage.setItem(LOCAL_STORAGE_MODE_KEY, mode.toString());
     startApp(mode);
 }
 

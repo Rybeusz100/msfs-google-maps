@@ -1,11 +1,14 @@
-import type { Mode } from './enums';
+import { LOCAL_STORAGE_MODE_KEY } from './constants';
+import { Mode } from './enums';
 
-export function getMode() {
-    let mode: Mode = parseInt(localStorage.getItem('mode') || '0');
-
-    if (isNaN(mode) || mode < 0 || mode > 1) {
-        mode = 0;
+export function getMode(): Mode {
+    const modeFromStorage = localStorage.getItem(LOCAL_STORAGE_MODE_KEY);
+    if (modeFromStorage) {
+        const mode = parseInt(modeFromStorage);
+        if (Object.values(Mode).includes(mode)) {
+            return mode;
+        }
     }
 
-    return mode;
+    return Mode.OpenStreetMap;
 }
