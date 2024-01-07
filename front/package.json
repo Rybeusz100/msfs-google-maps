@@ -4,12 +4,13 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint --ext .ts ./src",
-    "prettier": "prettier --write ./src/**/*.ts"
+    "prettier": "prettier --write ./src/**/*.{ts,scss}"
   },
   "dependencies": {
     "geolocation-utils": "^1.2.5",
     "nosleep.js": "^0.12.0",
-    "ol": "^7.0.0"
+    "ol": "^7.0.0",
+    "sass": "^1.69.7"
   },
   "devDependencies": {
     "@types/google.maps": "^3.49.2",

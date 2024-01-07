@@ -1,0 +1,220 @@
+$primary-color: #333;
+$secondary-color: #f2f2f2;
+$third-color: #444;
+$warning-color: #f7b800;
+$error-color: #da0000;
+$border-radius: 4px;
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.map-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#map {
+    flex: 1;
+}
+
+.topnav {
+    background-color: $primary-color;
+    color: $secondary-color;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &-section {
+        display: flex;
+    }
+
+    &-item {
+        padding: 8px;
+        display: flex;
+        align-items: center;
+
+        input {
+            &[type='checkbox'] {
+                height: 24px;
+                width: 24px;
+                cursor: pointer;
+            }
+
+            &[type='number'] {
+                background-color: $primary-color;
+                color: $secondary-color;
+                height: 30px;
+                width: 72px;
+                font-size: inherit;
+            }
+        }
+
+        label {
+            cursor: pointer;
+            &:hover:not(:active) {
+                filter: brightness(125%);
+            }
+        }
+
+        button {
+            border: 3px solid $third-color;
+            border-radius: $border-radius;
+            background: $primary-color;
+            cursor: pointer;
+            height: 36px;
+            color: $secondary-color;
+            font-size: inherit;
+
+            &:hover:not(:active) {
+                filter: brightness(125%);
+            }
+        }
+    }
+}
+
+#shutdown {
+    color: $secondary-color;
+    background-color: $error-color;
+    font-size: 22px;
+    width: 40px;
+    height: 40px;
+}
+
+#changeMode {
+    font-size: 22px;
+    width: 40px;
+    height: 40px;
+}
+
+#status-icon {
+    cursor: pointer;
+
+    &.hidden {
+        display: none;
+    }
+
+    &.warning {
+        color: $warning-color;
+    }
+
+    &.error {
+        color: $error-color;
+    }
+}
+
+#OSM-popup {
+    padding-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-close {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        border: none;
+        background-color: transparent;
+        cursor: pointer;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+    }
+
+    &-data {
+        background-color: white;
+        border-radius: 8px;
+        padding: 12px;
+    }
+
+    &::after {
+        transform: translateY(-5px);
+        content: '';
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-top: 20px solid white;
+    }
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+#settings-gear {
+    cursor: pointer;
+    &:hover:not(:active) {
+        filter: brightness(125%);
+    }
+}
+
+/* NUMBER INPUT FIELD */
+// https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
+input {
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    &[type='number'] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+}
+/* ------------------ */
+
+@media screen and (min-width: 1264px) {
+    .gear-wrapper {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1263px) {
+    .topnav {
+        position: absolute;
+        z-index: 5;
+        border-radius: $border-radius;
+        bottom: 32px;
+        left: 8px;
+        padding: 8px 16px 8px 16px;
+        flex-direction: column;
+
+        &-section {
+            display: none;
+            flex-direction: column;
+
+            &.responsive {
+                display: flex;
+            }
+
+            &-last {
+                flex-direction: row;
+            }
+        }
+
+        &-center {
+            justify-content: center;
+        }
+    }
+
+    .gear-wrapper {
+        width: 100%;
+    }
+}
